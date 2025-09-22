@@ -1,0 +1,118 @@
+<!--<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Publicar Livro</title>
+    <link rel="stylesheet" th:href="@{../css/form.css}">
+</head>
+<body>
+<div class="container">
+
+    <h2>Publicar livro</h2>
+
+     Mensagem de erro geral 
+    <div th:if="${erro}" class="alert alert-danger">
+        <p th:text="${erro}"></p>
+    </div>
+
+    <form th:action="@{/livros/salvar}" th:object="${livroDTO}" method="post" enctype="multipart/form-data">
+
+         Hidden para edição 
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{capaUrl}"/>
+        <input type="hidden" th:field="*{pdfUrl}"/>
+
+        <div class="form-grid">
+
+            Upload da capa 
+            <div class="capa-box">
+                <label for="capaFile" class="capa-label"
+                       style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+                    <span id="placeholderText">Adicionar uma capa</span>
+                    <img id="preview"
+                         th:attr="src=${livroDTO.capaUrl}"
+                         alt="Pré-visualização da capa"/>
+                </label>
+                <input type="file" id="capaFile" name="capaFile" accept="image/*" hidden>
+            </div>
+
+            Detalhes do livro 
+            <div class="detalhes">
+                <h3>Detalhes do livro</h3>
+
+                <label for="nome">Título</label>
+                <input type="text" id="nome" th:field="*{nome}" placeholder="Digite o título do livro"/>
+                <p th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="error"></p>
+
+                <label for="anoPublicacao">Ano de Publicação</label>
+                <input type="number" id="anoPublicacao" th:field="*{anoPublicacao}"/>
+                <p th:if="${#fields.hasErrors('anoPublicacao')}" th:errors="*{anoPublicacao}" class="error"></p>
+
+                <label for="sinopse">Sinopse</label>
+                <textarea id="sinopse" th:field="*{sinopse}" placeholder="Faça uma sinopse do livro"></textarea>
+                <p th:if="${#fields.hasErrors('sinopse')}" th:errors="*{sinopse}" class="error"></p>
+
+                <label for="genero">Gênero</label>
+                <select id="genero" th:field="*{genero}">
+                    <option th:each="g : ${T(LuizHFAnjos.com.github.Biblioteca.model.GeneroEnum).values()}"
+                            th:value="${g}" th:text="${g}">
+                    </option>
+                </select>
+
+                <h3>Informações do autor</h3>
+
+                <label for="autor">Autor</label>
+                <input type="text" id="autor" th:field="*{autor}" placeholder="Digite o nome do autor"/>
+                <p th:if="${#fields.hasErrors('autor')}" th:errors="*{autor}" class="error"></p>
+
+                <label for="descricaoAutor">Descrição do autor</label>
+                <textarea id="descricaoAutor" th:field="*{descricaoAutor}" placeholder="Digite uma breve descrição"></textarea>
+                <p th:if="${#fields.hasErrors('descricaoAutor')}" th:errors="*{descricaoAutor}" class="error"></p>
+
+                <h3>PDF do livro</h3>
+                <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf"/>
+
+                <div class="botoes">
+                    <button type="submit">Salvar</button>
+                    <a th:href="@{/livros}" class="cancelar">Cancelar</a>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+<script>
+    // Preview da capa
+    document.getElementById('capaFile').addEventListener('change', function () {
+        const file = this.files && this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const preview = document.getElementById('preview');
+            const placeholder = document.getElementById('placeholderText');
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            if (placeholder) placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Mostrar capa ao carregar página (edição)
+    document.addEventListener('DOMContentLoaded', function () {
+        const preview = document.getElementById('preview');
+        const placeholder = document.getElementById('placeholderText');
+
+        if (preview && preview.getAttribute('src')) {
+            preview.style.display = 'block';
+            if (placeholder) placeholder.style.display = 'none';
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html> -->

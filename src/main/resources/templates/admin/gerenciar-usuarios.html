@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciar Usuários | Biblioteca Online</title>
+    
+    <!-- Links corrigidos com Thymeleaf -->
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/gerenciar-usuarios.css}" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+    <!-- Header reutilizado do fragmento -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="admin-users">
+        <div class="container-1120">
+            <div class="page-header-publicar">
+                <a th:href="@{/perfil-admin}" class="back-arrow" title="Voltar">
+                    <i class="bx bx-arrow-back"></i>
+                </a>
+                <h1>Usuários</h1>
+            </div>
+
+            <!-- Mensagens de sucesso ou erro vindas do Controller -->
+            <div th:if="${sucesso}" class="alert alert-success" th:text="${sucesso}"></div>
+            <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+            <div class="search-table-container">
+                <input id="user-search-input" type="text" placeholder="Pesquisar por nome ou e-mail..." />
+            </div>
+        </div>
+
+        <section class="user-list">
+            <!-- Loop do Thymeleaf para criar um card para cada usuário -->
+            <article class="user-card" th:each="usuario : ${usuarios}">
+                <div class="avatar">
+                    <!-- Imagem de perfil dinâmica -->
+                    <img th:src="@{${usuario.fotoPerfil} ?: '/img/user.png'}" alt="Avatar do usuário" />
+                </div>
+                <div class="meta">
+                    <!-- Nome e email dinâmicos -->
+                    <span class="name" th:text="${usuario.nome}">Nome do Usuário</span>
+                    <span class="email" th:text="${usuario.email}">email@usuario.com</span>
+                    <div class="roles">
+                        <!-- Loop para exibir os cargos (roles) -->
+                        <span th:each="role : ${usuario.roles}" 
+                              th:text="${role.name}" 
+                              class="role-badge"
+                              th:classappend="${role.name == 'ADMIN'} ? 'role-badge-admin' : 'role-badge-user'">
+                        </span>
+                    </div>
+                </div>
+                <div class="actions-card">
+                    <!-- Formulário para Promover a Admin (Seguro) -->
+                    <form th:action="@{/admin/usuarios/promover/{id}(id=${usuario.id})}" method="post">
+                        <button type="submit" class="promote-btn" title="Promover a Admin">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </button>
+                    </form>
+                    
+                    <!-- Formulário para Deletar (Seguro) -->
+                    <form th:action="@{/admin/usuarios/deletar/{id}(id=${usuario.id})}" method="post" class="delete-form">
+                        <button type="submit" class="delete-btn" title="Deletar Usuário">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </article>
+            
+            <!-- Mensagem para quando não houver outros usuários -->
+            <div th:if="${#lists.isEmpty(usuarios)}" style="text-align: center; grid-column: 1 / -1; padding: 2rem; color: #6b7280;">
+                <p>Nenhum outro usuário encontrado no sistema.</p>
+            </div>
+        </section>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/gerenciar-usuarios.js}"></script>
+</body>
+</html>

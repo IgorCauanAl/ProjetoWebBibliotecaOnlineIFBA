@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
+    <link rel="stylesheet" th:href = "@{/css/recuperar.css}" />
+    <link rel="stylesheet" th:href = "@{/css/login.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <title>Recuperar Senha</title>
+</head>
+<body>
+<div class="container">
+    <div class="login-wrap active">
+        <div class="title">
+            <h1 id="titulo-etapa">Recuperar Senha</h1>
+        </div>
+
+        <form method="POST" id="recuperarForm">
+            <div class="input-area">
+                <input type="email" id="email" required />
+                <label for="email">Digite seu e-mail...</label>
+            </div>
+            <div class="button-area">
+                <button type="submit" class="login-btn">Enviar</button>
+            </div>
+        </form>
+
+        <form method="POST" id="etapa-codigo" style="display: none;">
+            <div class="input-area">
+                <input type="text" id="codigo" required pattern="\d{6}" title="O código deve ter 6 dígitos" />
+                <label for="codigo">Digite o código de 6 dígitos...</label>
+            </div>
+            <div class="button-area">
+                <button type="submit" class="login-btn" style="width: 14rem;" >Verificar Código</button>
+            </div>
+        </form>
+
+        <form method="POST" id="etapa-nova-senha" style="display: none;">
+            <div class="input-area">
+                <input type="password" id="nova-senha" required />
+                <label for="nova-senha">Digite a nova senha...</label>
+            </div>
+            <div class="input-area">
+                <input type="password" id="confirmar-senha" required />
+                <label for="confirmar-senha">Confirme a nova senha...</label>
+            </div>
+            <div class="button-area">
+                <button type="submit" class="login-btn" style="width: 12rem;">Salvar Senha</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script th:src="@{/js/login.js}"></script>
+<script th:src = "@{/js/recuperar.js}"></script>
+</body>
+</html>

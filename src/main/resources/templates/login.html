@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
+      <link rel="stylesheet" th:href="@{/css/login.css}" />
+    <title>Entrar</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="login-wrap active">
+        <div class="title">
+          <h1>Entrar</h1>
+        </div>
+        
+        <div th:if="${param.error}" style="color: red; text-align: center; margin-bottom: 10px;">
+            E-mail ou senha inválidos.
+        </div>
+        <div th:if="${param.logout}" style="color: green; text-align: center; margin-bottom: 10px;">
+            Você foi desconectado com sucesso.
+        </div>
+
+        <form method="POST" th:action="@{/perform_login}">
+          <div class="input-area">
+            <input
+              type="email"
+              name="username" id="email-login"
+              autocomplete="on"
+              required
+            />
+            <label for="email-login">E-mail</label>
+          </div>
+
+          <div class="input-area">
+            <input 
+              type="password" 
+              name="password" id="password-login" 
+              required 
+            />
+            <label for="password-login">Senha</label>
+          </div>
+
+          <div class="forgot-pass">
+            <a th:href="@{/recuperar}">Esqueceu a senha?</a>
+          </div>
+
+          <div class="button-area">
+            <button type="submit" class="login-btn">Entrar</button>
+          </div>
+        </form>
+
+        <div class="form-toggle-area">
+          <p>Não tem uma conta? <span id="toggle-signup">Inscreva-se</span></p>
+        </div>
+      </div>
+
+      <div class="signup-wrap">
+        <div class="title">
+          <h1>Se inscreva</h1>
+        </div>
+
+        <form> <div class="input-area">
+            <input
+              type="text"
+              name="nome" id="nome-cadastro"
+              autocomplete="off"
+              required
+            />
+            <label for="nome-cadastro">Nome</label>
+          </div>
+
+          <div class="input-area">
+            <input
+              type="email" name="email"
+              id="email-cadastro"
+              autocomplete="off"
+              required
+            />
+            <label for="email-cadastro">Email</label>
+          </div>
+
+          <div class="input-area">
+            <input type="password" name="senha" id="password-cadastro" required />
+            <label for="password-cadastro">Senha</label>
+          </div>
+
+          <div class="button-area">
+            <button type="submit" class="signup-btn">Cadastrar</button>
+          </div>
+        </form>
+
+        <div class="form-toggle-area">
+          <p>Já possui uma conta? <span id="toggle-login">Entre agora</span></p>
+        </div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/login.js}"></script>
+  </body>
+</html>

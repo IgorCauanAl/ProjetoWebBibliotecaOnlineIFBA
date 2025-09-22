@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciar Livros | Biblioteca Online</title>
+    
+    <!-- Links de CSS e Fontes com Thymeleaf -->
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/gerenciar-livros.css}" />
+    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  </head>
+
+  <body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="publicar-container">
+      <div class="page-header-publicar">
+        <a th:href="@{/perfil-admin}" class="back-arrow" title="Voltar">
+          <i class="bx bx-arrow-back"></i>
+        </a>
+        <h1>Gerenciar livros</h1>
+      </div>
+      
+      <div class="actions">
+        <a class="btn add-book-btn" th:href="@{/admin/livros/novo}">Adicionar Livro</a>
+      </div>
+      
+      <div class="search-table-container">
+        <input type="text" id="table-search-input" placeholder="Pesquisar por título ou autor na tabela..." />
+      </div>
+
+      <div class="table-container">
+        <table class="book-table">
+          <thead>
+            <tr>
+              <th>Capa</th>
+              <th>Nome do Livro</th>
+              <th>Autor</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <!-- ✅ Tabela agora é dinâmica, carregada do backend -->
+          <tbody id="book-list">
+            <tr th:each="livro : ${livros}">
+              <td>
+                <img th:src="@{${livro.capaUrl}}" alt="Capa do livro" class="book-cover" />
+              </td>
+              <td th:text="${livro.nome}">Título do Livro</td>
+              <td th:text="${livro.autor}">Autor do Livro</td>
+              <td class="action-buttons">
+                <a th:href="@{/admin/livros/editar/{id}(id=${livro.id})}" class="edit-btn" title="Editar">
+                  <i class="fa-solid fa-pencil"></i>
+                </a>
+                <a th:href="@{/admin/livros/deletar/{id}(id=${livro.id})}" class="delete-btn" title="Deletar">
+                  <i class="fa-solid fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+            <!-- Mensagem caso a lista de livros esteja vazia -->
+            <tr th:if="${#lists.isEmpty(livros)}">
+                <td colspan="4" style="text-align: center; padding: 20px;">Nenhum livro encontrado.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-about">
+          <h2>Sobre</h2>
+          <p>
+            Biblioteca online é uma plataforma digital que oferece acesso gratuito a uma vasta coleção de livros em diversos gêneros e formatos. Nosso objetivo é promover a leitura e o compartilhamento de conhecimento.
+          </p>
+          <img th:src="@{/img/logohome.png}" alt="Logo Biblioteca" class="footer-logo" />
+        </div>
+        <div class="footer-contacts">
+          <h2>Contatos</h2>
+          <ul>
+            <li><i class="bx bx-envelope"></i> elivrosonline@gmail.com</li>
+            <li><i class="bx bxl-instagram"></i> bibliotecaonline.proj</li>
+            <li><i class="bx bxl-linkedin"></i> Projeto Biblioteca Online</li>
+            <li><i class="bx bxl-github"></i> BibliotecaOnline</li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright-container">
+        <p class="copyright">Copyright © 2024 Todos os direitos Reservados - Biblioteca Online</p>
+      </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/gerenciar-livros.js}"></script>
+    <script th:src="@{/js/home-search.js}" defer></script>
+  </body>
+</html>

@@ -1,0 +1,284 @@
+.publicar-container {
+  padding: 20px 5%;
+  min-height: calc(100vh - 280px);
+}
+
+/* título + voltar (igual usuários) */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 6px 0 6px;
+}
+.page-header .back-btn {
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  line-height: 1;
+  color: #2f3559;
+  cursor: pointer;
+}
+.page-title {
+  font-family: "Playfair Display", serif;
+  font-size: 42px;
+  color: #2f3559;
+  margin: 0;
+}
+
+/* ações (Adicionar / Exportar) */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin: 8px 0 12px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+.btn-pill {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.btn-danger {
+  background: #d94a4a;
+  color: #fff;
+}
+.btn-danger:hover {
+  background: #c73c3c;
+}
+.btn-light {
+  background: #fff;
+  color: #2f3559;
+  border-color: #e5e7eb;
+}
+.btn-light:hover {
+  background: #f7f7f9;
+}
+
+/* busca local da tabela */
+.table-search {
+  margin: 10px 0 12px;
+}
+.table-search input {
+  width: 520px;
+  max-width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 0 14px;
+  font-size: 14px;
+  outline: none;
+}
+.table-search input:focus {
+  border-color: #2f3559;
+  box-shadow: 0 0 0 3px rgba(47, 53, 89, 0.1);
+}
+
+/* (compat com IDs usados) */
+.search-table-container {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+#table-search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+#table-search-input:focus {
+  outline: none;
+  border-color: #2f3559;
+  box-shadow: 0 0 5px rgba(47, 53, 89, 0.5);
+}
+
+/* tabela */
+.table-container {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+.book-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.book-table th,
+.book-table td {
+  padding: 18px 20px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  vertical-align: middle;
+  display: table-cell;
+}
+.book-table th {
+  background-color: #2f3559;
+  color: #fff;
+  font-weight: 700;
+}
+.book-table tbody tr:hover {
+  background-color: #f7f7f9;
+}
+
+/* capa */
+.book-cover {
+  width: 60px;
+  height: auto;
+  border-radius: 6px;
+  vertical-align: middle;
+}
+
+/* botões de ação na tabela */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.action-buttons a,
+.action-buttons button {
+  background-color: #ffffff;
+  color: #2f3559;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease-in-out;
+}
+.action-buttons a:hover,
+.action-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+  color: #2f3559;
+}
+
+/* estado vazio (opcional) */
+.book-table tr.empty-state td {
+  text-align: center;
+  color: #6b7280;
+  padding: 28px 12px;
+  background: #fff;
+}
+
+/* SweetAlert padronizado */
+.swal2-popup {
+  height: auto !important;
+}
+.swal2-actions {
+  gap: 12px !important;
+}
+.swal-btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.swal-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.swal-btn--primary {
+  background: #2f3559 !important;
+  color: #fff !important;
+  border-color: #2f3559 !important;
+}
+.swal-btn--danger {
+  background: #ce2525 !important;
+  color: #fff !important;
+  border-color: #ce2525 !important;
+}
+.actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 13.5px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  background: transparent;
+  color: inherit;
+}
+
+.actions .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.actions .add-book-btn {
+  background: #e25879;
+  color: #fff;
+  border-color: #e84e67;
+}
+
+.actions .export-books-btn {
+  background: #2f3559;
+  color: #e5e7eb;
+  border: 1px solid #2f3559;
+}
+
+/* responsivo */
+@media (max-width: 920px) {
+  .page-title {
+    font-size: 34px;
+  }
+  .book-table th,
+  .book-table td {
+    padding: 14px 14px;
+    font-size: 15px;
+  }
+  .book-cover {
+    width: 52px;
+  }
+}
+@media (max-width: 640px) {
+  .page-title {
+    font-size: 28px;
+  }
+  .btn-pill {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+  .book-table th:nth-child(3),
+  .book-table td:nth-child(3) {
+    display: none;
+  }
+  .book-cover {
+    width: 48px;
+  }
+}
