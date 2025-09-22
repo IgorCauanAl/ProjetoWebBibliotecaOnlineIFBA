@@ -1,5 +1,8 @@
 server:
   port: 8081
+  error:
+    whitelabel:
+      enabled: false  # Desabilita a página de erro padrão do Spring Boot
 
 spring:
   application:
