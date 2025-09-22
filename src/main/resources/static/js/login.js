@@ -1,4 +1,4 @@
-// Seleciona os elementos do DOM
+ //Seleciona os elementos do DOM
 const loginForm = document.querySelector(".login-wrap");
 const signupForm = document.querySelector(".signup-wrap");
 const title = document.querySelector("title");

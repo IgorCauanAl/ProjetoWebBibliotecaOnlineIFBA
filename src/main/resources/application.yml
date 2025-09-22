@@ -26,7 +26,7 @@ spring:
     enabled: false
   
   mail:
-    host: live.smtp.mailtrap.io
+    host: sandbox.smtp.mailtrap.io
     port: 2525
     username: 2465e3908097e0
     password: 3214fe54610110
