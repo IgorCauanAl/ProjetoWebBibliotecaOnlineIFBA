@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!deleteButton) return;
 
       const form = deleteButton.closest(".delete-form");
-      event.preventDefault(); // Impede o envio imediato do formulário
+      event.preventDefault();
 
       Swal.fire({
         title: "Você tem certeza?",
@@ -27,27 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }).then((result) => {
         if (result.isConfirmed) {
           form.submit();
-        }
-      });
-    });
-  }
-
-  const searchInput = document.getElementById("user-search-input");
-  if (searchInput) {
-    searchInput.addEventListener("input", (event) => {
-      const term = event.target.value.trim().toLowerCase();
-      const cards = document.querySelectorAll(".user-list .user-card");
-
-      cards.forEach((card) => {
-        const name =
-          card.querySelector(".name")?.textContent.toLowerCase() || "";
-        const email =
-          card.querySelector(".email")?.textContent.toLowerCase() || "";
-
-        if (name.includes(term) || email.includes(term)) {
-          card.style.display = "";
-        } else {
-          card.style.display = "none";
         }
       });
     });
