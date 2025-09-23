@@ -5,7 +5,6 @@ import br.ifba.edu.BibliotecaOnline.DTO.UsuarioRespostaDTO;
 import br.ifba.edu.BibliotecaOnline.entities.Role;
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.excecao.EmailJaExisteException;
-import br.ifba.edu.BibliotecaOnline.excecao.RecursoNaoEncontradoException;
 import br.ifba.edu.BibliotecaOnline.repository.RoleRepository;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,12 +40,12 @@ public class CadastroService {
         if (usuarioRepository.count() == 0) {
             // Se for o primeiro, será ADMIN
             Role adminRole = roleRepository.findByName("ADMIN")
-                    .orElseThrow(() -> new RecursoNaoEncontradoException("Role ADMIN não encontrada"));
+                    .orElseThrow(() -> new RuntimeException("Role ADMIN não encontrada"));
             usuario.setRoles(Set.of(adminRole));
         } else {
             // Os demais serão USER
             Role userRole = roleRepository.findByName("USER")
-                    .orElseThrow(() -> new RecursoNaoEncontradoException("Role USER não encontrada"));
+                    .orElseThrow(() -> new RuntimeException("Role USER não encontrada"));
             usuario.setRoles(Set.of(userRole));
         }
 

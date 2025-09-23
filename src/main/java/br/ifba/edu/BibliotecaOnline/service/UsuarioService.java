@@ -6,7 +6,6 @@ import br.ifba.edu.BibliotecaOnline.entities.UsuarioExcluidoLog;
 import br.ifba.edu.BibliotecaOnline.repository.RoleRepository;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioExcluidoLogRepository;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
-import br.ifba.edu.BibliotecaOnline.excecao.RecursoNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -31,7 +30,7 @@ public class UsuarioService {
     @Transactional
     public void promoverParaAdmin(Long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado para o ID: " + usuarioId));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o ID: " + usuarioId));
 
         // NOVA VALIDAÇÃO: Verifica se o usuário já é um admin
         boolean jaEAdmin = usuario.getRoles().stream()
@@ -53,13 +52,13 @@ public class UsuarioService {
         String adminEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         
         Usuario adminLogado = usuarioRepository.findByEmail(adminEmail)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Admin não encontrado para o e-mail: " + adminEmail));
+                .orElseThrow(() -> new RuntimeException("Admin não encontrado para o e-mail: " + adminEmail));
         if (adminLogado.getId().equals(usuarioId)) {
             throw new IllegalStateException("Um administrador não pode deletar a própria conta.");
         }
 
         Usuario usuarioParaDeletar = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado para o ID: " + usuarioId));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o ID: " + usuarioId));
         
         // NOVA VALIDAÇÃO: Verifica se o usuário a ser deletado é um admin
         boolean ehAdmin = usuarioParaDeletar.getRoles().stream()

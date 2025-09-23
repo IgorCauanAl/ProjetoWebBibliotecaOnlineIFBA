@@ -6,7 +6,6 @@ import br.ifba.edu.BibliotecaOnline.entities.LivroExcluidoLog;
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.excecao.AnoPublicacaoInvalidoException;
 import br.ifba.edu.BibliotecaOnline.excecao.LivroDuplicadoException;
-import br.ifba.edu.BibliotecaOnline.excecao.RecursoNaoEncontradoException;
 import br.ifba.edu.BibliotecaOnline.mapper.LivroMapper;
 import br.ifba.edu.BibliotecaOnline.repository.LivroExcluidoLogRepository;
 import br.ifba.edu.BibliotecaOnline.repository.LivroRepository;
@@ -60,7 +59,7 @@ public class LivroService {
     @Transactional
     public void deletar(Long id) {
         LivroEntity livroParaDeletar = livroRepository.findById(id)
-            .orElseThrow(() -> new RecursoNaoEncontradoException("Livro não encontrado para o ID: " + id));
+            .orElseThrow(() -> new RuntimeException("Livro não encontrado para o ID: " + id));
 
         String adminEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -93,6 +92,6 @@ public class LivroService {
     public LivroDTO buscarPorId(Long id) {
         return livroRepository.findById(id)
                 .map(livroMapper::toDTO)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Livro não encontrado para o ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado para o ID: " + id));
     }
 }
