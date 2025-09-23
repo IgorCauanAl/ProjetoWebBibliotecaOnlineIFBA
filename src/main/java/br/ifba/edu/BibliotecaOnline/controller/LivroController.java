@@ -1,8 +1,6 @@
 package br.ifba.edu.BibliotecaOnline.controller;
 
 import br.ifba.edu.BibliotecaOnline.DTO.LivroDTO;
-import br.ifba.edu.BibliotecaOnline.excecao.AnoPublicacaoInvalidoException;
-import br.ifba.edu.BibliotecaOnline.excecao.LivroDuplicadoException;
 import br.ifba.edu.BibliotecaOnline.service.LivroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -83,10 +81,12 @@ public class LivroController {
             livroService.salvar(livroDTO);
             return "redirect:/perfil-admin";
 
-        } catch (LivroDuplicadoException | AnoPublicacaoInvalidoException | IOException e) {
-            model.addAttribute("erro", e.getMessage());
+        } catch (IOException e) {
+            // IOException ainda precisa ser tratada aqui pois é específica do upload de arquivos
+            model.addAttribute("erro", "Erro ao salvar arquivo: " + e.getMessage());
             return "admin/publicar-livro";
         }
+        // LivroDuplicadoException e AnoPublicacaoInvalidoException agora são tratadas pelo @ControllerAdvice
     }
 
     @GetMapping("/deletar/{id}")

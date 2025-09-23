@@ -77,6 +77,6 @@ public class LivroService {
     public LivroDTO buscarPorId(Long id) {
         return livroRepository.findById(id)
                 .map(livroMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado para o ID: " + id));
     }
 }

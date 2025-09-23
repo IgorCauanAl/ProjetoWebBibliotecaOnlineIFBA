@@ -49,7 +49,8 @@ public class UsuarioService {
     public void deletarUsuario(Long usuarioId) {
         String adminEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         
-        Usuario adminLogado = usuarioRepository.findByEmail(adminEmail).orElseThrow(() -> new RuntimeException("Admin não encontrado"));
+        Usuario adminLogado = usuarioRepository.findByEmail(adminEmail)
+                .orElseThrow(() -> new RuntimeException("Admin não encontrado para o e-mail: " + adminEmail));
         if (adminLogado.getId().equals(usuarioId)) {
             throw new IllegalStateException("Um administrador não pode deletar a própria conta.");
         }
