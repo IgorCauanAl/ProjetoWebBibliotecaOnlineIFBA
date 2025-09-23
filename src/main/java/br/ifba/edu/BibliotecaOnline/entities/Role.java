@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@Audited
 @Table(name = "TB_ROLE")
 public class Role {
 

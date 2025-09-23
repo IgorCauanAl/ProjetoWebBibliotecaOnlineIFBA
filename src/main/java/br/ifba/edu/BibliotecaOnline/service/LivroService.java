@@ -2,12 +2,10 @@ package br.ifba.edu.BibliotecaOnline.service;
 
 import br.ifba.edu.BibliotecaOnline.DTO.LivroDTO;
 import br.ifba.edu.BibliotecaOnline.entities.LivroEntity;
-import br.ifba.edu.BibliotecaOnline.entities.LivroExcluidoLog;
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.excecao.AnoPublicacaoInvalidoException;
 import br.ifba.edu.BibliotecaOnline.excecao.LivroDuplicadoException;
 import br.ifba.edu.BibliotecaOnline.mapper.LivroMapper;
-import br.ifba.edu.BibliotecaOnline.repository.LivroExcluidoLogRepository;
 import br.ifba.edu.BibliotecaOnline.repository.LivroRepository;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +25,9 @@ public class LivroService {
     private final LivroRepository livroRepository;
     private final LivroMapper livroMapper;
     private final UsuarioRepository usuarioRepository;
-    private final LivroExcluidoLogRepository logRepository;
 
     public void salvar(LivroDTO dto) {
-        // Validações
+     
         if (dto.getId() == null) {
             if (livroRepository.existsByNome(dto.getNome())) {
                 throw new LivroDuplicadoException("Já existe um livro com esse nome");
@@ -47,13 +44,13 @@ public class LivroService {
 
         LivroEntity entity = livroMapper.toEntity(dto);
 
-        // Lógica de Auditoria de Criação/Edição
+        
         String adminEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Usuario admin = usuarioRepository.findByEmail(adminEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("Admin não encontrado para o e-mail: " + adminEmail));
 
         entity.setPublicadoPor(admin);
-        livroRepository.save(entity);
+        livroRepository.save(entity); // Envers audita esta ação (criação ou edição) automaticamente.
     }
 
     @Transactional
@@ -61,18 +58,6 @@ public class LivroService {
         LivroEntity livroParaDeletar = livroRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Livro não encontrado para o ID: " + id));
 
-        String adminEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        // Criar e salvar o registro de log
-        LivroExcluidoLog logEntry = new LivroExcluidoLog(
-            livroParaDeletar.getId(),
-            livroParaDeletar.getNome(),
-            livroParaDeletar.getAutor(),
-            adminEmail
-        );
-        logRepository.save(logEntry);
-        
-        // Deletar o livro da tabela principal
         livroRepository.delete(livroParaDeletar);
     }
 

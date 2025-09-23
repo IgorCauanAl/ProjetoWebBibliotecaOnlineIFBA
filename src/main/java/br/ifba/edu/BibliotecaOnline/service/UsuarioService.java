@@ -2,9 +2,7 @@ package br.ifba.edu.BibliotecaOnline.service;
 
 import br.ifba.edu.BibliotecaOnline.entities.Role;
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
-import br.ifba.edu.BibliotecaOnline.entities.UsuarioExcluidoLog;
 import br.ifba.edu.BibliotecaOnline.repository.RoleRepository;
-import br.ifba.edu.BibliotecaOnline.repository.UsuarioExcluidoLogRepository;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -15,13 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final RoleRepository roleRepository;
-    private final UsuarioExcluidoLogRepository logRepository;
 
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
@@ -32,7 +30,6 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o ID: " + usuarioId));
 
-        // NOVA VALIDAÇÃO: Verifica se o usuário já é um admin
         boolean jaEAdmin = usuario.getRoles().stream()
                 .anyMatch(role -> role.getName().equals("ADMIN"));
 
@@ -45,6 +42,7 @@ public class UsuarioService {
 
         usuario.getRoles().add(adminRole);
         usuarioRepository.save(usuario);
+        // O Envers audita esta operação de 'save' automaticamente
     }
 
     @Transactional
@@ -59,7 +57,6 @@ public class UsuarioService {
         Usuario usuarioParaDeletar = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o ID: " + usuarioId));
         
-        // NOVA VALIDAÇÃO: Verifica se o usuário a ser deletado é um admin
         boolean ehAdmin = usuarioParaDeletar.getRoles().stream()
                 .anyMatch(role -> role.getName().equals("ADMIN"));
         
@@ -67,13 +64,6 @@ public class UsuarioService {
             throw new IllegalStateException("Não é permitido deletar outro administrador.");
         }
         
-        UsuarioExcluidoLog logEntry = new UsuarioExcluidoLog(
-                usuarioParaDeletar.getId(),
-                usuarioParaDeletar.getNome(),
-                usuarioParaDeletar.getEmail(),
-                adminEmail
-        );
-        logRepository.save(logEntry);
 
         usuarioRepository.delete(usuarioParaDeletar);
     }

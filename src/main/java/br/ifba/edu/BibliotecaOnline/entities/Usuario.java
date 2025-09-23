@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,6 +20,7 @@ import java.util.Set;
 @Getter @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
+@Audited
 @Table(name = "TB_USUARIO")
 public class Usuario {
 
@@ -44,10 +47,12 @@ public class Usuario {
 
 
     // Lista de favoritos do usuário
+    @NotAudited
     @OneToMany(mappedBy = "usuarioFavoritos")
     private List<Favoritos> favoritos = new ArrayList<>();
 
     @ManyToMany
+    @NotAudited
     @JoinTable(
             name = "TB_LIVRO_CURTIDA",
             joinColumns = @JoinColumn(name = "usuario_id"),

@@ -1,33 +1,49 @@
-HELP.md
+# Arquivos de log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Pasta de dependências do Node (caso use)
+node_modules/
+
+# Arquivos de build e saídas do Maven
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
+# Arquivos do H2 Database (pasta especificada no seu application.yml)
+data/
+
+# Pasta de uploads de arquivos
+uploads/
+
+# Arquivos do Eclipse
+.settings/
 .project
-.settings
-.springBeans
-.sts4-cache
+.classpath
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# Arquivos do IntelliJ IDEA
+.idea/
 *.iml
-*.ipr
+*.iws
 
-### NetBeans ###
+# Arquivos do VS Code
+.vscode/
+
+# Arquivos do NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+.nb-gradle/
 
-### VS Code ###
-.vscode/
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db

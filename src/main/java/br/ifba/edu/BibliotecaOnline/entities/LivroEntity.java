@@ -3,6 +3,7 @@ package br.ifba.edu.BibliotecaOnline.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import br.ifba.edu.BibliotecaOnline.model.GeneroEnum;
 @Table(name = "TB_LIVRO") // Nome da tabela alinhado ao data.sql
 @Getter
 @Setter
+@Audited
 public class LivroEntity {
 
     @Id
