@@ -3,6 +3,7 @@ package br.ifba.edu.BibliotecaOnline.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import org.hibernate.envers.Audited;
 
 import java.util.List;
@@ -23,9 +24,6 @@ public class LivroEntity {
     @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "autor", nullable = false)
-    private String autor;
-
     @Column(name = "ano_publicacao", nullable = false) // Nome da coluna padronizado
     private Integer anoPublicacao;
 
@@ -38,9 +36,6 @@ public class LivroEntity {
     @Column(name = "sinopse", length = 2000)
     private String sinopse;
 
-    @Column(length = 1000)
-    private String descricaoAutor;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "publicado_por_admin_id")
     private Usuario publicadoPor;
@@ -48,5 +43,9 @@ public class LivroEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "genero", nullable = false)
     private GeneroEnum genero;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "autor_id", nullable = false) // Novo campo de relacionamento
+    private Autor autor;
 
 }

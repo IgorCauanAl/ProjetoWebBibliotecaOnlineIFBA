@@ -12,7 +12,7 @@ function createCardHtml(livro) {
         <div class="book-card" data-id="${livro.id}">
             <div class="cover">${capaHtml}</div>
             <div class="book-title">${escapeHtml(livro.nome || '')}</div>
-            <div class="book-author">${escapeHtml(livro.autor || '')}</div>
+            <div class="book-author">${escapeHtml(livro.autorNome || '')}</div>
             <div class="card-footer">
                 <span class="meta">${livro.anoPublicacao || ''}</span>
             </div>

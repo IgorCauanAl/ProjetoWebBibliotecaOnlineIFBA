@@ -1,19 +1,18 @@
 package br.ifba.edu.BibliotecaOnline.controller;
 
 import br.ifba.edu.BibliotecaOnline.DTO.LivroDTO;
+import br.ifba.edu.BibliotecaOnline.service.AutorService; 
 import br.ifba.edu.BibliotecaOnline.service.LivroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +26,7 @@ import java.util.UUID;
 public class LivroController {
 
     private final LivroService livroService;
+    private final AutorService autorService; // Injetar AutorService
 
     @GetMapping
     public String exibirPaginaGerenciarLivros(Model model,
@@ -49,9 +49,14 @@ public class LivroController {
         return "admin/gerenciar-livros";
     }
 
+    private void carregarAutoresNoModelo(Model model) {
+        model.addAttribute("todosAutores", autorService.listarTodos());
+    }
+
     @GetMapping("/novo")
     public String exibirFormularioNovo(Model model) {
         model.addAttribute("livroDTO", new LivroDTO());
+        carregarAutoresNoModelo(model); // Carregar autores
         return "admin/publicar-livro";
     }
 
@@ -59,9 +64,11 @@ public class LivroController {
     public String exibirFormularioEditar(@PathVariable Long id, Model model) {
         LivroDTO livroDTO = livroService.buscarPorId(id);
         model.addAttribute("livroDTO", livroDTO);
+        carregarAutoresNoModelo(model); // Carregar autores
         return "admin/publicar-livro";
     }
 
+    // O método salvarLivro e salvarArquivo permanecem iguais
     @PostMapping("/salvar")
     public String salvarLivro(
             @Valid @ModelAttribute("livroDTO") LivroDTO livroDTO,
@@ -71,8 +78,15 @@ public class LivroController {
             Model model) {
 
         if (result.hasErrors()) {
+            carregarAutoresNoModelo(model);
             return "admin/publicar-livro";
         }
+        
+        // Validação customizada para o autor
+        if (livroDTO.getAutorId() == null && (livroDTO.getNovoAutorNome() == null || livroDTO.getNovoAutorNome().isBlank())) {
+             result.rejectValue("autorId", "error.autorId", "Você deve selecionar um autor existente ou cadastrar um novo.");
+        }
+
 
         if (livroDTO.getId() == null) {
             if (capaFile.isEmpty()) {
@@ -81,9 +95,11 @@ public class LivroController {
             if (pdfFile.isEmpty()) {
                 result.rejectValue("pdfUrl", "error.pdfUrl", "O arquivo PDF do livro é obrigatório.");
             }
-            if(result.hasErrors()){
-                 return "admin/publicar-livro";
-            }
+        }
+        
+        if(result.hasErrors()){
+            carregarAutoresNoModelo(model);
+            return "admin/publicar-livro";
         }
 
         try {
@@ -98,28 +114,24 @@ public class LivroController {
             }
 
             livroService.salvar(livroDTO);
-            return "redirect:/perfil-admin";
+            return "redirect:/admin/livros";
 
         } catch (IOException e) {
-            // IOException ainda precisa ser tratada aqui pois é específica do upload de arquivos
             model.addAttribute("erro", "Erro ao salvar arquivo: " + e.getMessage());
+            carregarAutoresNoModelo(model);
             return "admin/publicar-livro";
         }
-        // LivroDuplicadoException e AnoPublicacaoInvalidoException agora são tratadas pelo @ControllerAdvice
     }
-
+    
     @GetMapping("/deletar/{id}")
     public String deletarLivro(@PathVariable Long id) {
         livroService.deletar(id);
         return "redirect:/admin/livros";
     }
     
-    
-     
     private String salvarArquivo(MultipartFile arquivo, String diretorio) throws IOException {
         String nomeOriginal = arquivo.getOriginalFilename();
         if (nomeOriginal == null) {
-            // Garante que não teremos um NullPointerException se o nome do arquivo for nulo
             nomeOriginal = "arquivo_sem_nome_" + UUID.randomUUID();
         }
         

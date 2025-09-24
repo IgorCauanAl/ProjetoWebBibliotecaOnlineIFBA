@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <img src="${livro.capaUrl || '/img/placeholder.png'}" alt="Capa de ${livro.nome}" />
                 <div class="result-item-info">
                     <span class="title">${livro.nome}</span>
-                    <span class="author">${livro.autor}</span>
+                    <span class="author">${livro.autorNome}</span>
                 </div>
             </a>
         `).join('');

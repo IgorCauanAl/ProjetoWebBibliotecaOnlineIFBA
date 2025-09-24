@@ -53,7 +53,7 @@
                 <img th:src="@{${livro.capaUrl}}" alt="Capa do livro" class="book-cover" />
               </td>
               <td th:text="${livro.nome}">Título do Livro</td>
-              <td th:text="${livro.autor}">Autor do Livro</td>
+              <td th:text="${livro.autorNome}">Autor do Livro</td>
               <td class="action-buttons">
                 <a th:href="@{/admin/livros/editar/{id}(id=${livro.id})}" class="edit-btn" title="Editar">
                   <i class="fa-solid fa-pencil"></i>

@@ -2,7 +2,7 @@ package br.ifba.edu.BibliotecaOnline.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.EqualsAndHashCode;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,10 +10,13 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.envers.Audited;
+
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@Audited
 @Table(name = "TB_AUTOR")
 public class Autor {
 
@@ -23,7 +26,7 @@ public class Autor {
     private Long id;
 
     @NotBlank
-    @Column(name = "nome_autor" , nullable = false)
+    @Column(name = "nome_autor" , nullable = false, unique = true) // Adicionado unique = true
     private String nomeAutor;
 
     @Column(name = "foto_autor")
@@ -34,9 +37,15 @@ public class Autor {
     private String descricaoDoAutor;
 
     //Para cada autor há vários livros
-    @OneToMany(mappedBy = "autor")
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
     private List<LivroEntity> livros = new ArrayList<>();
 
+    public Autor(String nomeAutor,String descricaoDoAutor) {
+        this.nomeAutor = nomeAutor;
+        this.descricaoDoAutor = descricaoDoAutor;
+    }
 
+    
 
+    
 }
