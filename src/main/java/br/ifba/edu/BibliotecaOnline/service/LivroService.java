@@ -9,6 +9,9 @@ import br.ifba.edu.BibliotecaOnline.mapper.LivroMapper;
 import br.ifba.edu.BibliotecaOnline.repository.LivroRepository;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,11 +70,14 @@ public class LivroService {
                 .collect(Collectors.toList());
     }
 
-    public List<LivroDTO> buscarPorNomeOuAutor(String query) {
-        return livroRepository.findByNomeContainingIgnoreCaseOrAutorContainingIgnoreCase(query, query)
-                .stream()
-                .map(livroMapper::toDTO)
-                .collect(Collectors.toList());
+    public Page<LivroDTO> listarPaginado(Pageable pageable) {
+        Page<LivroEntity> paginaDeLivros = livroRepository.findAll(pageable);
+        return paginaDeLivros.map(livroMapper::toDTO);
+    }
+
+    public Page<LivroDTO> buscarPorPalavraChave(String keyword, Pageable pageable) {
+        Page<LivroEntity> paginaDeLivros = livroRepository.findByNomeContainingIgnoreCaseOrAutorContainingIgnoreCase(keyword, keyword, pageable);
+        return paginaDeLivros.map(livroMapper::toDTO);
     }
 
     public LivroDTO buscarPorId(Long id) {

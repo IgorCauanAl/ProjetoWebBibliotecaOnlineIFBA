@@ -1,8 +1,10 @@
-let menuIcon = document.querySelector("#menu-icon");
-let navbar = document.querySelector(".navbar");
-let sections = document.querySelectorAll("section");
-let navLinks = document.querySelectorAll("header nav a");
+// Seletores de elementos que podem estar no escopo global
+const menuIcon = document.querySelector("#menu-icon");
+const navbar = document.querySelector(".navbar");
+const sections = document.querySelectorAll("section");
+const navLinks = document.querySelectorAll("header nav a");
 
+// --- LÓGICA DO MENU HAMBÚRGUER (MOBILE) ---
 if (menuIcon) {
     menuIcon.onclick = () => {
         menuIcon.classList.toggle("bx-x");
@@ -10,31 +12,41 @@ if (menuIcon) {
     };
 }
 
-window.onscroll = () => {
+// --- LÓGICA DE SCROLL OTIMIZADA COM DEBOUNCE ---
+let scrollTimer;
+
+// A lógica que estava dentro do onscroll agora fica em uma função separada
+const handleScroll = () => {
     if (sections.length > 0 && navLinks.length > 0) {
         sections.forEach((sec) => {
-            let top = window.scrollY;
-            let offset = sec.offsetTop - 150;
-            let height = sec.offsetHeight;
-            let id = sec.getAttribute("id");
+            const top = window.scrollY;
+            const offset = sec.offsetTop - 150;
+            const height = sec.offsetHeight;
+            const id = sec.getAttribute("id");
 
             if (top >= offset && top < offset + height) {
-                navLinks.forEach((links) => {
-                    links.classList.remove("active");
-                    let activeLink = document.querySelector("header nav a[href*=" + id + "]");
-                    if (activeLink) {
-                        activeLink.classList.add("active");
-                    }
+                navLinks.forEach((link) => {
+                    link.classList.remove("active");
                 });
+                const activeLink = document.querySelector("header nav a[href*=" + id + "]");
+                if (activeLink) {
+                    activeLink.classList.add("active");
+                }
             }
         });
     }
 };
 
+window.onscroll = () => {
+    // Usa o debounce: cancela o timer anterior e agenda um novo
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(handleScroll, 100); // Executa a função 100ms após o usuário parar de rolar
+};
+
 
 // --- LÓGICA EXECUTADA APÓS O CARREGAMENTO DA PÁGINA ---
 document.addEventListener("DOMContentLoaded", () => {
-  
+ 
   // --- LÓGICA DO POPUP DE ENVIAR LIVRO ---
   const openPopupBtn = document.getElementById("open-popup-btn");
   const closePopupBtn = document.getElementById("close-popup-btn");
@@ -70,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  
+ 
   // --- LÓGICA PARA INICIALIZAR OS CARROSSÉIS (DINÂMICOS) ---
   function initializeCarousel(slider) {
     const list = slider.querySelector(".list");

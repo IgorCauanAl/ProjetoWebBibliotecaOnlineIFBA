@@ -282,3 +282,61 @@
     width: 48px;
   }
 }
+/* ======================================================= */
+/* CÓDIGO DE PAGINAÇÃO                                     */
+/* ======================================================= */
+
+/* Contêiner principal da paginação */
+.pagination-container {
+    width: 100%;
+    max-width: 1120px;
+    display: flex;
+    justify-content: center;
+    margin-top: auto; 
+    padding-bottom: 2rem;
+}
+
+/* A lista (ul) que segura os itens da página */
+.pagination {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Estilo de cada link de número da página (o 'a') */
+.page-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Efeito ao passar o mouse sobre um número */
+.page-link:hover {
+    background-color: #e9ecef;
+    color: #0056b3;
+}
+
+/* Estilo do item da página ATIVA (a página atual) */
+.page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    font-weight: bold;
+    cursor: default;
+}
+
+/* Estilo para itens desabilitados (se houver) */
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+    opacity: 0.6;
+}

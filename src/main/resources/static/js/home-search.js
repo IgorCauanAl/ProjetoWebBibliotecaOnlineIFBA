@@ -52,7 +52,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error('Erro ao buscar os livros.');
             }
             
-            const books = await response.json();
+        
+            const pageData = await response.json(); 
+            
+            const books = pageData.content;        
             
             resultsContainer.style.display = "block"; 
             renderSuggestions(books);
@@ -74,7 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.addEventListener("click", (event) => {
-        if (!event.target.closest('.search-container')) {
+
+        if (event.isTrusted && !event.target.closest('.search-container')) {
             resultsContainer.style.display = "none";
         }
     });

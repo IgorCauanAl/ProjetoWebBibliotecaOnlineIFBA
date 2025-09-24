@@ -7,7 +7,7 @@
     <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/home-search.css}" />
-    <script type="module" th:href="@{/js/script.js}"></script>
+    <script th:src="@{/js/script.js}" defer></script>
     <script th:src="@{/js/home-search.js}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
@@ -16,24 +16,8 @@
   </head>
 
   <body id="home-page">
-    <header class="header">
-      <a th:href="@{/meu-perfil}" class="logo" id="header-avatar" sec:authorize="isAuthenticated()">
-        <i class="bx bx-user-circle" style="font-size: 50px; color: #2f3559"></i>
-        <span sec:authentication="principal.username" style="font-size: 1.6rem; margin-left: 8px;"></span>
-      </a>
-      <i class="bx bx-menu" id="menu-icon"></i>
-      <nav class="navbar">
-        <a href="#home"><i class="bx bx-home"></i></a>
-        <a href="#favoritos"><i class="bx bx-heart"></i></a>
-      </nav>
-      <div class="search-container">
-        <input type="text" id="home-search-input" placeholder="Buscar por título ou autor..." class="search-input" autocomplete="off" />
-        <button class="search-btn" aria-label="Buscar">
-          <i class="bx bx-search"></i>
-        </button>
-        <div id="search-results-container" class="search-results-list"></div>
-      </div>
-    </header>
+    
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <section class="home" id="home">
       <div class="home-content">
@@ -110,8 +94,6 @@
         </div>
       </div>
     </section>
-
-    <div id="search-results-container" class="search-results"></div>
 
     <section class="emalta" id="emalta">
       <h2 class="heading">Em alta esse mês</h2>

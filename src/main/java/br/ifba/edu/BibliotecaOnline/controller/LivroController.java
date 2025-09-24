@@ -4,6 +4,10 @@ import br.ifba.edu.BibliotecaOnline.DTO.LivroDTO;
 import br.ifba.edu.BibliotecaOnline.service.LivroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,8 +29,23 @@ public class LivroController {
     private final LivroService livroService;
 
     @GetMapping
-    public String listarLivrosAdmin(Model model) {
-        model.addAttribute("livros", livroService.listar());
+    public String exibirPaginaGerenciarLivros(Model model,
+                                              @RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "10") int size,
+                                              @RequestParam(required = false) String keyword) {
+        
+        Pageable pageable = PageRequest.of(page, size);
+        Page<LivroDTO> paginaDeLivros;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            paginaDeLivros = livroService.buscarPorPalavraChave(keyword, pageable);
+            model.addAttribute("keyword", keyword);
+        } else {
+            paginaDeLivros = livroService.listarPaginado(pageable);
+        }
+        
+        model.addAttribute("paginaDeLivros", paginaDeLivros);
+        
         return "admin/gerenciar-livros";
     }
 
