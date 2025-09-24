@@ -65,8 +65,8 @@
         <section class="section">
             <h3>Senha</h3>
             <!-- Formulário funcional para mudar senha -->
-            <form th:action="@{/perfil/mudar-senha}" method="post">
-                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <form id = "form-mudar-senha" th:action="@{/perfil/mudar-senha}" method="post">
+                 <input id="_csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <div class="form-grid">
                     <label class="input">
                         <input type="password" id="senha-atual" name="senhaAtual" placeholder="Insira a senha atual" required />
@@ -87,8 +87,8 @@
         <section class="section danger">
             <h3>Deletar conta</h3>
             <small>Quando você deleta sua conta, perde acesso a todos os serviços da plataforma.</small>
-            <form th:action="@{/perfil/deletar-conta}" method="post" id="form-deletar-conta">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <form  method="post" id="form-deletar-conta">
+                <input type="hidden"/>
                 <label class="check">
                     <input type="checkbox" id="confirmar-exclusao" required />
                     <span>Desejo apagar minha conta e todos meus dados</span>
@@ -145,5 +145,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script th:src="@{/js/perfil.js}"></script>
     <script th:src="@{/js/script.js}"></script>
+
 </body>
 </html>

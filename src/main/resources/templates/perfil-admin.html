@@ -62,8 +62,8 @@
       
       <section class="section">
         <h3>Senha</h3>
-        <form th:action="@{/perfil/mudar-senha}" method="post">
-           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <form id = "form-mudar-senha" th:action="@{/perfil/mudar-senha}" method="post">
+           <input id="_csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
           <div class="form-grid">
             <label class="input">
               <input type="password" id="senha-atual" name="senhaAtual" placeholder="Insira a senha atual" required />

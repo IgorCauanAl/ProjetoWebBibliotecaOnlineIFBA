@@ -97,15 +97,31 @@ document.addEventListener("DOMContentLoaded", () => {
         text: "Essa ação não poderá ser revertida!",
       });
 
-      if (isConfirmed) {
-        // Aqui você enviaria o formulário de exclusão para o backend
-        await swalOK({
-          icon: "success",
-          title: "Apagada!",
-          text: "Sua conta foi excluída com sucesso.",
+
+        if (!isConfirmed) return;
+
+        //Fetch para comunicação com o back
+        const resposta = await fetch("/api/usuariosMudar/deletarConta", {
+            method: "POST",
         });
-        // Ex: window.location.href = "/login";
-      }
+
+
+        const texto = await resposta.text();
+
+        if (resposta.ok) {
+            await swalOK({
+                icon: "success",
+                title: "Apagada!",
+                text: texto,
+            });
+            window.location.href = "/login";
+        } else {
+            await swalOK({
+                icon: "error",
+                title: "Erro!",
+                text: texto,
+            });
+        }
     });
   }
 
@@ -167,4 +183,41 @@ document.addEventListener("DOMContentLoaded", () => {
       reader.readAsDataURL(file);
     });
   }
+
+
+    //Mudar a senha do usuário
+    document.getElementById("form-mudar-senha").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const senhaAtual = document.getElementById("senha-atual").value;
+        const novaSenha = document.getElementById("nova-senha").value;
+        const confirmaSenha = document.getElementById("confirma-senha").value;
+        const csrfToken = document.getElementById("_csrf").value;
+
+        const resposta = await fetch("/api/usuariosMudar/senha", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken
+            },
+            body: JSON.stringify({
+                senhaAntiga: senhaAtual,
+                senhaNova: novaSenha,
+                confirmaSenha: confirmaSenha
+            })
+        });
+
+        if (resposta.ok) {
+            const msg = await resposta.text();
+            alert("Senha alterada com sucesso! Faça o login novamente!");
+            window.location.href = "/login";
+        } else {
+            const erro = await resposta.text();
+            alert("Erro: " + erro);
+        }
+    });
+
+
+
+
 });
