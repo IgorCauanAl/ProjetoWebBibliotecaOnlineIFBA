@@ -110,8 +110,10 @@
               </div>
               <div class="card-content">
                 <p class="card-title" th:text="${livro.nome}">Título do Livro</p>
-                <p class="card-author" th:text="${livro.autorNome}">Autor do Livro</p>
-                <button class="details-btn">Detalhes</button>
+
+                <p class="card-author" th:text="${livro.autor}">Autor do Livro</p>
+                <button  th:onclick="'window.location.href=\'/admin/livros/detalhesLivro/' + ${livro.id} + '\';'"
+                         class="details-btn">Detalhes</button>
               </div>
             </div>
           </div>
@@ -138,8 +140,10 @@
               </div>
               <div class="card-content">
                 <p class="card-title" th:text="${livro.nome}">Título do Livro</p>
-                <p class="card-author" th:text="${livro.autorNome}">Autor do Livro</p>
-                <button class="details-btn">Detalhes</button>
+
+                <p class="card-author" th:text="${livro.autor}">Autor do Livro</p>
+                <button th:onclick="'window.location.href=\'/admin/livros/detalhesLivro/' + ${livro.id} + '\';'" class="details-btn">Detalhes</button>
+
               </div>
             </div>
           </div>
