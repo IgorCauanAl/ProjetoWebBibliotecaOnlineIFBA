@@ -1,6 +1,8 @@
 package br.ifba.edu.BibliotecaOnline.controller;
 
 import br.ifba.edu.BibliotecaOnline.DTO.LivroDTO;
+import br.ifba.edu.BibliotecaOnline.entities.Autor;
+import br.ifba.edu.BibliotecaOnline.repository.AutorRepository;
 import br.ifba.edu.BibliotecaOnline.service.AutorService;
 import br.ifba.edu.BibliotecaOnline.entities.LivroEntity;
 import br.ifba.edu.BibliotecaOnline.repository.LivroRepository;
@@ -30,7 +32,7 @@ public class LivroController {
     private final LivroService livroService;
     private final AutorService autorService;
     private final LivroRepository livroRepository;
-
+    private final AutorRepository autorRepository;
 
     @GetMapping
     public String exibirPaginaGerenciarLivros(Model model,
@@ -155,6 +157,7 @@ public class LivroController {
                 .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado!"));
 
         model.addAttribute("livro",livro);
+
         return "livros";
 
            }

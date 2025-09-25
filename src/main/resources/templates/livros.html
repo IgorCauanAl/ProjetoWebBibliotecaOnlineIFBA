@@ -22,29 +22,8 @@
   </head>
 
   <body>
-    <header class="header">
-      <a href="perfil.html" class="logo" id="header-avatar">
-        <i
-          class="bx bx-user-circle"
-          style="font-size: 50px; color: #2f3559"
-        ></i>
-      </a>
-      <nav class="navbar">
-        <a href="home.html"><i class="bx bx-home"></i></a>
-        <a href="curtidos.html"><i class="bx bx-heart"></i></a>
-      </nav>
 
-      <div class="search-container">
-        <input
-          type="text"
-          placeholder="Busque por livros.."
-          class="search-input"
-        />
-        <button class="search-btn" aria-label="Buscar">
-          <i class="bx bx-search"></i>
-        </button>
-      </div>
-    </header>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <section class="livro-detalhe" id="livro-detalhe">
         <div class="livro-content">
@@ -70,13 +49,13 @@
         </div>
     </section>
 
-    <section class="autor-section">
+    <section class="autor-section" >
         <h2>Sobre o autor</h2>
         <div class="autor-content">
-            <img class="autor-foto" th:src="@{${livro.fotoAutor}}" alt="Foto do autor" />
+            <img class="autor-foto"  alt="Foto do autor" />
             <div class="autor-info">
-                <h3 th:text="${livro.autor}"></h3>
-                <p th:text="${livro.descricaoAutor}"></p>
+                <h3 ></h3>
+                <p ></p>
             </div>
         </div>
     </section>

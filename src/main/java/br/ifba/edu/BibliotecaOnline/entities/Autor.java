@@ -20,6 +20,11 @@ import org.hibernate.envers.Audited;
 @Table(name = "TB_AUTOR")
 public class Autor {
 
+    public Autor(String nomeAutor,String descricaoDoAutor) {
+        this.nomeAutor = nomeAutor;
+        this.descricaoDoAutor = descricaoDoAutor;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "autor_id")
@@ -40,10 +45,6 @@ public class Autor {
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
     private List<LivroEntity> livros = new ArrayList<>();
 
-    public Autor(String nomeAutor,String descricaoDoAutor) {
-        this.nomeAutor = nomeAutor;
-        this.descricaoDoAutor = descricaoDoAutor;
-    }
 
     
 
