@@ -21,7 +21,7 @@ public class PerfilController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    @GetMapping("/meu-perfil")
+    @GetMapping("/perfil")
     public String redirecionarPerfil() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
