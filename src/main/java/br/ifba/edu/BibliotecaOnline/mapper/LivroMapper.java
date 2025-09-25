@@ -17,5 +17,6 @@ public interface LivroMapper {
     @Mapping(source = "autor.id", target = "autorId")
     @Mapping(target = "novoAutorNome", ignore = true)
     @Mapping(target = "novoAutorDescricao", ignore = true)
+    @Mapping(target = "novoAutorFotoUrl", ignore = true)
     LivroDTO toDTO(LivroEntity entity);
 }

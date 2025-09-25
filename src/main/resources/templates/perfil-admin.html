@@ -1,160 +1,150 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perfil Administrador | Biblioteca Online</title>
     
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&family=Nunito:wght@400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     
+    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/perfil.css}" />
-    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
-  </head>
-  <body>
+</head>
+<body>
 
-    <div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/novo-header :: header}"></div>
 
     <main class="wrap">
-      <div class="page-title">
-        <h1>Perfil Administrador</h1>
-        <p>Veja os detalhes do seu perfil aqui</p>
-      </div>
-
-      <section class="grid-top">
-        <article class="card profile-card">
-          <div class="avatar" id="profile-avatar">
-            <img th:src="@{${usuario.fotoPerfil} ?: '/img/user.png'}" alt="Foto do usuário" class="avatar-img" />
-          </div>
-          <div class="profile-meta">
-            <h3 th:text="${usuario.nome}">Nome do Usuário</h3>
-            <label class="edit-badge" for="upload-foto">
-              <i class="bx bx-edit"></i> editar foto
-              <input type="file" id="upload-foto" accept="image/*" hidden />
-            </label>
-          </div>
-        </article>
-
-        <article class="card pad relative">
-          <h2>Outros detalhes</h2>
-          <button class="inline-edit" aria-label="Editar detalhes" data-open="editar-detalhes">
-            <i class="bx bx-edit"></i>
-          </button>
-          <div class="details">
-            <div class="field">
-              <b>Nome</b>
-              <div th:text="${usuario.nome}">Lara Costa</div>
-            </div>
-            <div class="field">
-              <b>E-mail</b>
-              <div th:text="${usuario.email}">email@gmail.com</div>
-            </div>
-            <div class="field">
-              <b>Livros curtidos</b>
-              <div th:text="${#lists.size(usuario.livrosCurtidos)}">10</div>
-            </div>
-          </div>
-        </article>
-      </section>
-      
-      <section class="section">
-        <h3>Senha</h3>
-        <form id = "form-mudar-senha" th:action="@{/perfil/mudar-senha}" method="post">
-           <input id="_csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-          <div class="form-grid">
-            <label class="input">
-              <input type="password" id="senha-atual" name="senhaAtual" placeholder="Insira a senha atual" required />
-              <button class="toggle" type="button" data-target="senha-atual" aria-label="Mostrar senha"><i class="bx bx-hide"></i></button>
-            </label>
-            <label class="input">
-              <input type="password" id="nova-senha" name="novaSenha" placeholder="Insira nova senha" required />
-              <button class="toggle" type="button" data-target="nova-senha" aria-label="Mostrar senha"><i class="bx bx-hide"></i></button>
-            </label>
-            <label class="input">
-              <input type="password" id="confirma-senha" name="confirmacaoSenha" placeholder="Confirme nova senha" required />
-              <button class="toggle" type="button" data-target="confirma-senha" aria-label="Mostrar senha"><i class="bx bx-hide"></i></button>
-            </label>
-          </div>
-          <div class="row-actions">
-            <button class="btn" type="submit">Atualizar</button>
-          </div>
-        </form>
-      </section>
-
-      <section class="section danger">
-        <h3>Deletar conta</h3>
-        <small>Quando você deleta sua conta, perde acesso a todos os livros curtidos, mas seus livros publicados não somem, se quiser apagar, delete-os manualmente.</small>
-        <label class="check">
-          <input type="checkbox" id="confirmar-exclusao" />
-          <span>Desejo apagar minha conta e todos meus dados</span>
-        </label>
-        <div class="row-actions">
-          <button class="btn" id="apagar-btn" disabled>Apagar</button>
+        <div class="page-title">
+            <h1>Perfil Administrador</h1>
+            <p>Veja os detalhes do seu perfil aqui</p>
         </div>
-      </section>
+
+        <section class="grid-top">
+            <article class="card profile-card">
+                <div class="avatar" id="profile-avatar">
+                    <img th:src="@{${usuario.fotoPerfil} ?: '/img/user.png'}" alt="Foto do usuário" class="avatar-img" />
+                </div>
+                <div class="profile-meta">
+                    <h3 th:text="${usuario.nome}">Nome do Usuário</h3>
+                    <label class="edit-badge" for="upload-foto">
+                        <i class="bx bx-edit"></i> editar foto
+                        <input type="file" id="upload-foto" accept="image/*" hidden />
+                    </label>
+                </div>
+            </article>
+
+            <article class="card pad relative">
+                <h2>Outros detalhes</h2>
+                <button class="inline-edit" aria-label="Editar detalhes" data-open="editar-detalhes">
+                    <i class="bx bx-edit"></i>
+                </button>
+                <div class="details">
+                    <div class="field">
+                        <b>Nome</b>
+                        <div th:text="${usuario.nome}">Lara Costa</div>
+                    </div>
+                    <div class="field">
+                        <b>E-mail</b>
+                        <div th:text="${usuario.email}">email@gmail.com</div>
+                    </div>
+                    <div class="field">
+                        <b>Livros curtidos</b>
+                        <div th:text="${#lists.size(usuario.livrosCurtidos)}">10</div>
+                    </div>
+                </div>
+            </article>
+        </section>
+        
+        <section class="section">
+            <h3>Senha</h3>
+            <form id="form-mudar-senha" th:action="@{/perfil/mudar-senha}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="form-grid">
+                    <label class="input">
+                        <input type="password" id="senha-atual" name="senhaAtual" placeholder="Insira a senha atual" required />
+                        <button class="toggle" type="button" data-target="senha-atual" aria-label="Mostrar senha"><i class="bx bx-hide"></i></button>
+                    </label>
+                    <label class="input">
+                        <input type="password" id="nova-senha" name="novaSenha" placeholder="Insira nova senha" required />
+                        <button class="toggle" type="button" data-target="nova-senha" aria-label="Mostrar senha"><i class="bx bx-hide"></i></button>
+                    </label>
+                    <label class="input">
+                        <input type="password" id="confirma-senha" name="confirmaSenha" placeholder="Confirme nova senha" required />
+                        <button class="toggle" type="button" data-target="confirma-senha" aria-label="Mostrar senha"><i class="bx bx-hide"></i></button>
+                    </label>
+                </div>
+                <div class="row-actions">
+                    <button class="btn" type="submit">Atualizar</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="section danger">
+            <h3>Deletar conta</h3>
+            <small>Quando você deleta sua conta, perde acesso a todos os serviços da plataforma.</small>
+            <form method="post" id="form-deletar-conta">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <label class="check">
+                    <input type="checkbox" id="confirmar-exclusao" required />
+                    <span>Desejo apagar minha conta e todos meus dados</span>
+                </label>
+                <div class="row-actions">
+                    <button class="btn" id="apagar-btn" type="submit" disabled>Apagar</button>
+                </div>
+            </form>
+        </section>
     </main>
 
-    <div class="popup-overlay" id="editar-detalhes">
-      <!-- Conteúdo do Popup para editar detalhes -->
-    </div>
-
     <section class="container-cards">
-      <div class="cards-grid">
-        <a th:href="@{/admin/gerenciar-usuarios}" class="card-adm">
-          <div class="card-icon"><i class="fa-solid fa-users"></i></div>
-          <h3>Gerenciar Usuários</h3>
-        </a>
-
-        <a th:href="@{/admin/livros}" class="card-adm">
-          <div class="card-icon"><i class="fa-solid fa-pencil"></i></div>
-          <h3>Gerenciar Livros</h3>
-        </a>
-      </div>
+        <div class="cards-grid">
+            <a th:href="@{/admin/gerenciar-usuarios}" class="card-adm">
+                <div class="card-icon"><i class="fa-solid fa-users"></i></div>
+                <h3>Gerenciar Usuários</h3>
+            </a>
+            <a th:href="@{/admin/livros}" class="card-adm">
+                <div class="card-icon"><i class="fa-solid fa-pencil"></i></div>
+                <h3>Gerenciar Livros</h3>
+            </a>
+        </div>
     </section>
 
     <section class="logout-section">
-      <form th:action="@{/logout}" method="post">
-        <button class="btn btn-outline btn--lg btn--block" type="submit">
-          <i class="bx bx-log-out"></i> Sair da conta
-        </button>
-      </form>
+        <form th:action="@{/logout}" method="post">
+            <button class="btn btn-outline btn--lg btn--block" type="submit">
+                <i class='bx bx-log-out'></i> Sair da conta
+            </button>
+        </form>
     </section>
 
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-about">
-          <h2>Sobre</h2>
-          <p>
-            Biblioteca online é uma plataforma digital que oferece acesso
-            gratuito a uma vasta coleção de livros em diversos gêneros e
-            formatos. Nosso objetivo é promover a leitura e o compartilhamento
-            de conhecimento.
-          </p>
-          <img th:src="@{/img/logohome.png}" alt="Logo Biblioteca" class="footer-logo" />
+    <div class="popup-overlay" id="editar-detalhes">
+        <div class="popup-content" role="dialog" aria-modal="true" aria-labelledby="titulo-editar">
+            <button class="close-btn" type="button" aria-label="Fechar" data-close="editar-detalhes">&times;</button>
+            <h2 id="titulo-editar">Editar detalhes</h2>
+            <p>Atualize suas informações de perfil.</p>
+            <form id="form-editar-detalhes" method="post">
+                <div class="form-group">
+                    <label for="det-nome">Nome</label>
+                    <input type="text" id="det-nome" name="nome" placeholder="Digite seu nome" required />
+                </div>
+                <div class="form-group">
+                    <label for="det-email">E-mail</label>
+                    <input type="email" id="det-email" name="email" placeholder="Digite seu e-mail" required />
+                </div>
+                <button class="btn" type="submit">Salvar</button>
+            </form>
         </div>
-        <div class="footer-contacts">
-          <h2>Contatos</h2>
-          <ul>
-            <li><i class="bx bx-envelope"></i> elivrosonline@gmail.com</li>
-            <li><i class="bx bxl-instagram"></i> bibliotecaonline.proj</li>
-            <li><i class="bx bxl-linkedin"></i> Projeto Biblioteca Online</li>
-            <li><i class="bx bxl-github"></i> BibliotecaOnline</li>
-          </ul>
-        </div>
-      </div>
-      <div class="copyright-container">
-        <p class="copyright">
-          Copyright © 2024 Todos os direitos Reservados - Biblioteca Online
-        </p>
-      </div>
-    </footer>
+    </div>
 
+    <div th:replace="~{fragments/novo-footer :: footer}"></div>
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script th:src="@{/js/perfil.js}"></script>
-    <script th:src="@{/js/script.js}"></script>
     <script th:src="@{/js/home-search.js}" defer></script>
-  </body>
+    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/perfil.js}"></script>
+</body>
 </html>

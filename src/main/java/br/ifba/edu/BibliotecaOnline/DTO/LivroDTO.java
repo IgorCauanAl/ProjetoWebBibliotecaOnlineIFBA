@@ -37,4 +37,5 @@ public class LivroDTO {
     // Usado quando se cadastra um novo autor junto com o livro
     private String novoAutorNome;
     private String novoAutorDescricao;
+    private String novoAutorFotoUrl;
 }

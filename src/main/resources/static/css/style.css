@@ -103,10 +103,7 @@ body {
   color: #0f1222;
   transform: scale(1.1);
 }
-#menu-icon {
-  font-size: 3.6rem;
-  display: none;
-}
+
 
 section {
   min-height: 10;
@@ -166,15 +163,15 @@ section {
 
 /* HOME */
 .home {
-  min-height: auto;
-  padding: 15rem 9% 8rem; 
-  display: flex;
-  align-items: center;
+  min-height: 10vh;
+  padding: 10rem 0;
 }
 
 .home-text {
-  flex: 2; /* O texto ocupa 2/3 do espaço */
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .home h2 {
@@ -193,9 +190,9 @@ section {
 }
 
 .home-text p {
-  font-size: 1.8rem;
-  line-height: 1.6;
-  max-width: 100%; /* Usa toda a largura do container de texto */
+  font-size: 23px;
+  line-height: 150%;
+  max-width: 83%;
   text-align: justify;
   font-family: "Nunito", sans-serif;
   color: #2f3559;
@@ -205,14 +202,12 @@ section {
 .home-content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 4rem;
-  width: 100%;
+  justify-content: center;
+  gap: 5rem;
 }
 
 .home-img {
-  flex: 1; /* A imagem ocupa 1/3 do espaço */
-  max-width: 450px;
+  padding: 0 5rem;
 }
 .home-img img {
   width: 215rem;
@@ -1032,24 +1027,22 @@ section {
   gap: 2px;
 }
 
-/* FOOTER */
-
 .footer {
   width: 100%;
   background-color: #f9f3ed;
   color: #2f3559;
   font-family: "Playfair Display";
+  padding: 40px 0 0; /* Adicionado padding no topo */
 }
 
 .footer-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Permite que os itens quebrem a linha se não houver espaço */
   max-width: 1200px;
   margin: 0 auto;
-  left: 10%;
-  position: relative;
+  padding: 0 20px; /* Adicionado padding para espaçamento nas laterais */
 }
 
 .footer-about,
@@ -1112,7 +1105,9 @@ section {
 
 @media (max-width: 768px) {
   .slider .list {
-    height: 24vh;
+    height: 62vh;
+    margin: 6rem;
+    margin-top: 0rem;
   }
 
   .slider .buttons button {
@@ -1168,35 +1163,21 @@ section {
     }
 
     @media (max-width: 895px) {
-      #menu-icon {
-        display: block;
+      .search-input {
+        width: 175px;
+        font-size: 1.2rem;
       }
-      .navbar {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        width: 50%;
-        padding: 1rem 3%;
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(20px);
-        border-top-left-radius: 2rem;
-        border-left: 2px solid #3a0440;
-        border-bottom: 2px solid #3a0440;
-        display: none;
-        z-index: 9998;
-      }
-      .navbar.active {
-        display: block;
-      }
-      .navbar a {
-        display: block;
-        font-size: 2rem;
-        margin: 3rem 0;
-        color: white;
+      .search-container {
+        right: 2%;
       }
       .home {
-        flex-direction: column-reverse;
-        margin: 5rem 4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        flex-direction: column; 
+        margin: 5rem 0 0 15rem; 
+        padding: 0 2rem; 
+        text-align: center; 
       }
       .home-content h3 {
         font-size: 4rem;
@@ -1252,6 +1233,10 @@ section {
 
       .home-text {
         flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 35rem;
       }
       .home-img img {
         display: none;
@@ -1259,10 +1244,29 @@ section {
 
       .home p {
         font-size: 2rem;
-        max-width: 84%;
+        max-width: 100%;
         text-align: justify;
         margin-left: auto;
         margin-right: auto;
+      }
+
+      .emalta h1 {
+        font-size: 20px;
+        margin: 1rem;
+      }
+
+      .recentes h1 {
+        font-size: 20px;
+        margin: 1rem;
+      }
+        .terror h1 {
+        font-size: 20px;
+        margin: 1rem;
+      }
+
+       .romance h1 {
+        font-size: 20px;
+        margin: 1rem;
       }
 
       .btn-group a {
@@ -1287,28 +1291,6 @@ section {
 
       .tittle-text {
         font-size: 1.5rem;
-      }
-      .footer {
-        padding: 20px 0;
-      }
-      .footer .social a {
-        font-size: 18px;
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
-        margin: 0 3px;
-      }
-
-      .footer ul {
-        font-size: 12px;
-      }
-
-      .footer ul li {
-        padding: 0 5px;
-      }
-
-      .footer .copyright {
-        font-size: 12px;
       }
     }
   }
@@ -1755,6 +1737,172 @@ img {
     margin: 2rem auto;
   }
 }
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column; 
+    align-items: center;  
+    text-align: center;    
+  }
+
+  .footer-about,
+  .footer-contacts {
+    margin: 20px 0; 
+    width: 90%;     
+  }
+
+  .footer-contacts ul li {
+    justify-content: center;
+  }
+    
+  .footer-logo {
+    margin-left: auto;   
+    margin-right: auto;
+  }
+  
+  .back-arrow{
+    position: relative;
+  }
+
+  .form-fields{
+    margin-top: 25rem;
+  }
+
+  .livro-detalhe
+  {
+    padding: 0rem 5% 2rem; 
+    padding-top: 10%;
+  }
+
+  .livro-content {
+  flex-direction: column;
+  align-items: center;    
+  gap: 3rem;
+}
+
+.livro-info {
+  padding: 0;
+  text-align: center;
+}
+
+.livro-info .heading {
+  font-size: 3rem;
+  max-width: 100%;
+}
+
+.livro-info p {
+  font-size: 1.8rem; 
+  text-align: center;
+}
+
+.livro-capa img {
+  max-width: 200px; 
+}
+
+/* --- Seção do Autor --- */
+.autor-content {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.autor-foto {
+  width: 120px;
+  height: 120px;
+}
+
+.autor-section h2 {
+  text-align: center;
+}
+
+/* --- Seção de Avaliações --- */
+.avaliacoes-section h2 {
+  text-align: center;
+}
+
+.avaliar-box {
+  flex-direction: column; 
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.avaliar-box textarea {
+  width: 100%; 
+  font-size: 1.6rem;
+}
+
+.avaliacao-card {
+  flex-direction: column; 
+  align-items: center;
+  text-align: center;
+}
+}
+
+@media (max-width: 768px) {
+  /* ---  gerenciar usuarios--- */
+  .admin-users .container-1120 {
+    padding: 0 2rem;
+  }
+  .page-header-publicar {
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .page-header-publicar .back-arrow {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .actions {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .actions .btn {
+    width: 100%; 
+    text-align: center;
+  }
+
+  .user-list {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .user-card {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .user-card .meta .name {
+    font-size: 1.6rem; 
+  }
+
+  .user-card .meta .email {
+    font-size: 1.2rem; 
+  }
+  .popup-content .modal-actions .btn {
+    width: 100%; 
+  }
+}
+
+@media (max-width: 480px) {
+  .user-card {
+    flex-direction: column; 
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .user-card .actions-card {
+    margin-top: 1rem;
+  }
+
+  .page-header-publicar h1 {
+    font-size: 2.4rem; 
+  }
+}
 @media (max-width: 520px) {
   html {
     font-size: 56%;
@@ -1808,4 +1956,67 @@ img {
   object-fit: cover;
   border-radius: 50% !important;
   display: block;
+}
+
+/*EDITADOOOOO AGR*/
+
+.edit-tag {
+  font-size: 0.8rem;
+  color: #6b6b75;
+  margin-left: 4px;
+}
+/* header de cada avaliação */
+.avaliacao-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.review-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn {
+  border: none;
+  border-radius: 10px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.btn.sm {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.9rem;
+}
+
+.btn.ghost {
+  background: #f6f6f8;
+  color: #2f3559;
+}
+.btn.ghost:hover {
+  background: #ececf2;
+}
+
+.btn.ghost.danger {
+  background: #f7e9ef;
+  color: #9a5071;
+}
+.btn.ghost.danger:hover {
+  background: #f2d8e3;
+}
+.swal2-actions .swal2-styled {
+  min-width: clamp(140px, 45%, 200px) !important;
+  height: 44px !important;
+  padding: 0 18px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+}
+
+.swal2-actions {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 8px !important;
 }

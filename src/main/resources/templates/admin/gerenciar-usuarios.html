@@ -4,19 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gerenciar Usuários | Biblioteca Online</title>
-    
+
     <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/css/gerenciar-usuarios.css}" />
-    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
-    <script th:src="@{/js/home-search.js}" defer></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
+    
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/gerenciar-usuarios.css}" />
 </head>
 
 <body>
-    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div th:replace="~{fragments/novo-header :: header}"></div>
 
     <main class="admin-users">
         <div class="container-1120">
@@ -29,6 +31,13 @@
 
             <div th:if="${sucesso}" class="alert alert-success" th:text="${sucesso}"></div>
             <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+            <div class="actions">
+                <button class="btn add-user-btn" data-open="criar-usuario">
+                    Adicionar Usuário
+                </button>
+                <button class="btn export-users-btn">Exportar Usuários</button>
+            </div>
 
             <div class="search-table-container">
                 <form th:action="@{/admin/gerenciar-usuarios}" method="get" class="search-form">
@@ -56,14 +65,14 @@
                 </div>
                 <div class="actions-card">
                     <th:block th:if="${!#lists.contains(usuario.roles.![name], 'ADMIN')}">
-                        <form th:action="@{/admin/usuarios/promover/{id}(id=${usuario.id})}" method="post">
+                        <form th:action="@{/admin/usuarios/promover/{id}(id=${usuario.id})}" method="post" style="display: inline;">
                             <button type="submit" class="promote-btn" title="Promover a Admin">
                                 <i class="fa-solid fa-user-shield"></i>
                             </button>
                         </form>
-                        <form th:action="@{/admin/usuarios/deletar/{id}(id=${usuario.id})}" method="post" class="delete-form">
-                            <button type="submit" class="delete-btn" title="Deletar Usuário">
-                                <i class="fa-solid fa-trash"></i>
+                        <form th:action="@{/admin/usuarios/deletar/{id}(id=${usuario.id})}" method="post" class="delete-form" style="display: inline;">
+                            <button type="submit" class="delete-btn-card" title="Deletar Usuário">
+                                <i class="bx bx-trash"></i>
                             </button>
                         </form>
                     </th:block>
@@ -82,10 +91,18 @@
                 </li>
             </ul>
         </nav>
-
     </main>
-    
+
+    <div class="popup-overlay" id="criar-usuario">
+        </div>
+
+    <div class="popup-overlay" id="editar-usuario">
+        </div>
+
+    <div th:replace="~{fragments/novo-footer :: footer}"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script th:src="@{/js/gerenciar-usuarios.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
 </body>
 </html>

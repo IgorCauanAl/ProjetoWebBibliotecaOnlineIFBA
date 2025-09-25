@@ -1,89 +1,117 @@
-// Seletores de elementos que podem estar no escopo global
-const menuIcon = document.querySelector("#menu-icon");
-const navbar = document.querySelector(".navbar");
-const sections = document.querySelectorAll("section");
-const navLinks = document.querySelectorAll("header nav a");
+// let menuIcon = document.querySelector("#menu-icon");
+// let navbar = document.querySelector(".navbar");
+// let sections = document.querySelectorAll("section");
+// let navLinks = document.querySelectorAll("header nav a");
 
-// --- LÓGICA DO MENU HAMBÚRGUER (MOBILE) ---
-if (menuIcon) {
-    menuIcon.onclick = () => {
-        menuIcon.classList.toggle("bx-x");
-        navbar.classList.toggle("active");
-    };
-}
+// window.onscroll = () => {
+//   sections.forEach((sec) => {
+//     let top = window.scrollY;
+//     let offset = sec.offsetTop - 150;
+//     let height = sec.offsetHeight;
+//     let id = sec.getAttribute("id");
 
-// --- LÓGICA DE SCROLL OTIMIZADA COM DEBOUNCE ---
-let scrollTimer;
+//     if (top >= offset && top < offset + height) {
+//       navLinks.forEach((links) => {
+//         links.classList.remove("active");
+//         document
+//           .querySelector("header nav a[href*=" + id + "]")
+//           .classList.add("active");
+//       });
+//     }
+//   });
+// };
 
-// A lógica que estava dentro do onscroll agora fica em uma função separada
-const handleScroll = () => {
-    if (sections.length > 0 && navLinks.length > 0) {
-        sections.forEach((sec) => {
-            const top = window.scrollY;
-            const offset = sec.offsetTop - 150;
-            const height = sec.offsetHeight;
-            const id = sec.getAttribute("id");
+// menuIcon.onclick = () => {
+//   menuIcon.classList.toggle("bx-x");
+//   navbar.classList.toggle("active");
+// };
 
-            if (top >= offset && top < offset + height) {
-                navLinks.forEach((link) => {
-                    link.classList.remove("active");
-                });
-                const activeLink = document.querySelector("header nav a[href*=" + id + "]");
-                if (activeLink) {
-                    activeLink.classList.add("active");
-                }
-            }
-        });
-    }
-};
-
-window.onscroll = () => {
-    // Usa o debounce: cancela o timer anterior e agenda um novo
-    clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(handleScroll, 100); // Executa a função 100ms após o usuário parar de rolar
-};
-
-
-// --- LÓGICA EXECUTADA APÓS O CARREGAMENTO DA PÁGINA ---
 document.addEventListener("DOMContentLoaded", () => {
- 
-  // --- LÓGICA DO POPUP DE ENVIAR LIVRO ---
   const openPopupBtn = document.getElementById("open-popup-btn");
   const closePopupBtn = document.getElementById("close-popup-btn");
   const popupOverlay = document.getElementById("popup-overlay");
   const livroForm = document.getElementById("livro-form");
 
-  if (openPopupBtn && closePopupBtn && popupOverlay && livroForm) {
-    const openPopup = () => popupOverlay.classList.add("active");
-    const closePopup = () => popupOverlay.classList.remove("active");
+  const openPopup = () => {
+    popupOverlay.classList.add("active");
+  };
 
-    openPopupBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-      openPopup();
-    });
+  const closePopup = () => {
+    popupOverlay.classList.remove("active");
+  };
 
-    closePopupBtn.addEventListener("click", closePopup);
+  openPopupBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    openPopup();
+  });
 
-    popupOverlay.addEventListener("click", (event) => {
-      if (event.target === popupOverlay) {
-        closePopup();
-      }
-    });
+  closePopupBtn.addEventListener("click", closePopup);
 
-    livroForm.addEventListener("submit", (event) => {
-      event.preventDefault();
+  popupOverlay.addEventListener("click", (event) => {
+    if (event.target === popupOverlay) {
       closePopup();
-      livroForm.reset();
-      Swal.fire({
-        title: "Enviado com sucesso!",
-        text: "Agradecemos sua contribuição. Nossa equipe irá avaliar.",
-        icon: "success",
-      });
+    }
+  });
+  livroForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    closePopup();
+
+    livroForm.reset();
+
+    Swal.fire({
+      title: "Enviado com sucesso!",
+      text: "Agradecemos sua contribuição. Nossa equipe irá avaliar.",
+      icon: "success",
     });
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOM carregado. Iniciando script dinâmico do carrossel.");
+
+  // DADOS DOS LIVROS (ADICIONAR/REMOVER LIVROS)
+  // ESTA SEÇÃO FOI REMOVIDA PARA QUE OS DADOS SEJAM PUXADOS DE OUTRA FONTE (EX: BANCO DE DADOS)
+
+  //FUNÇÃO QUE CRIA O HTML DE CADA CARD
+  function gerarCardHTML(livro) {
+    return `
+        <div class="item">
+          <div class="card">
+            <div class="card-image-container">
+              <img src="${livro.imagem}" alt="${livro.alt}" />
+              <button class="like-btn" aria-label="Curtir">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </button>
+            </div>
+            <div class="card-content">
+              <p class="card-title">${livro.titulo}</p>
+              <p class="card-author">${livro.autor}</p>
+              <button class="details-btn" onclick="window.location.href='livros.html'">Detalhes</button>
+            </div>
+          </div>
+        </div>
+      `;
   }
 
- 
-  // --- LÓGICA PARA INICIALIZAR OS CARROSSÉIS (DINÂMICOS) ---
+  //FUNÇÃO QUE PREENCHE O CARROSSEL E INICIALIZA TUDO
+  function popularCarrossel(seletorCarrossel, listaDeLivros) {
+    const carrosselList = document.querySelector(`${seletorCarrossel} .list`);
+    if (carrosselList) {
+      // Gera o HTML para todos os livros e junta tudo em uma única string
+      carrosselList.innerHTML = listaDeLivros.map(gerarCardHTML).join("");
+    } else {
+      console.error(
+        `Elemento .list não encontrado para o seletor ${seletorCarrossel}`
+      );
+    }
+  }
+
+  // Preenche cada carrossel com seus respectivos livros
+  // As chamadas para popularCarrossel foram removidas, pois os dados estáticos não existem mais.
+
   function initializeCarousel(slider) {
     const list = slider.querySelector(".list");
     const items = slider.querySelectorAll(".list .item");
@@ -91,7 +119,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const prevBtn = slider.querySelector(".prev-btn");
 
     if (!list || items.length === 0 || !nextBtn || !prevBtn) {
-      return; 
+      console.error(
+        "ERRO: Elementos essenciais do carrossel não foram encontrados dentro de:",
+        slider
+      );
+      return;
     }
 
     let active = 0;
@@ -100,7 +132,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function reloadSlider() {
       if (items.length === 0) return;
       const cardWidth = items[0].offsetWidth;
-      const gap = parseInt(window.getComputedStyle(list).getPropertyValue("gap")) || 0;
+      const gap =
+        parseInt(window.getComputedStyle(list).getPropertyValue("gap")) || 0;
       const step = cardWidth + gap;
       const itemsPerScreen = Math.floor(slider.offsetWidth / step);
       const scrollLimit = Math.max(0, items.length - itemsPerScreen);
@@ -116,25 +149,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     nextBtn.onclick = function () {
-        const cardWidth = items[0].offsetWidth;
-        const gap = parseInt(window.getComputedStyle(list).getPropertyValue("gap")) || 0;
-        const step = cardWidth + gap;
-        const itemsPerScreen = Math.floor(slider.offsetWidth / step);
-        const scrollLimit = Math.max(0, items.length - itemsPerScreen);
+      const cardWidth = items[0].offsetWidth;
+      const gap =
+        parseInt(window.getComputedStyle(list).getPropertyValue("gap")) || 0;
+      const step = cardWidth + gap;
+      const itemsPerScreen = Math.floor(slider.offsetWidth / step);
+      const scrollLimit = Math.max(0, items.length - itemsPerScreen);
 
-        active = (active < scrollLimit) ? active + 1 : 0;
-        reloadSlider();
+      if (active < scrollLimit) {
+        active++;
+      } else {
+        active = 0;
+      }
+      reloadSlider();
     };
 
     prevBtn.onclick = function () {
-        const cardWidth = items[0].offsetWidth;
-        const gap = parseInt(window.getComputedStyle(list).getPropertyValue("gap")) || 0;
-        const step = cardWidth + gap;
-        const itemsPerScreen = Math.floor(slider.offsetWidth / step);
-        const scrollLimit = Math.max(0, items.length - itemsPerScreen);
+      const cardWidth = items[0].offsetWidth;
+      const gap =
+        parseInt(window.getComputedStyle(list).getPropertyValue("gap")) || 0;
+      const step = cardWidth + gap;
+      const itemsPerScreen = Math.floor(slider.offsetWidth / step);
+      const scrollLimit = Math.max(0, items.length - itemsPerScreen);
 
-        active = (active > 0) ? active - 1 : scrollLimit;
-        reloadSlider();
+      if (active > 0) {
+        active--;
+      } else {
+        active = scrollLimit;
+      }
+      reloadSlider();
     };
 
     reloadSlider();
@@ -146,16 +189,14 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeCarousel(slider);
   });
 
-  // --- LÓGICA DO BOTÃO DE CURTIR ---
-  document.body.addEventListener('click', function(event) {
-      const likeButton = event.target.closest('.like-btn');
-      if (likeButton) {
-          likeButton.classList.toggle("active");
-          likeButton.classList.add("animating");
-          setTimeout(() => {
-              likeButton.classList.remove("animating");
-          }, 300);
-      }
+  const likeButtons = document.querySelectorAll(".like-btn");
+  likeButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      this.classList.toggle("active");
+      this.classList.add("animating");
+      setTimeout(() => {
+        this.classList.remove("animating");
+      }, 300);
+    });
   });
-
 });

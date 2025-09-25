@@ -2,27 +2,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("home-search-input");
     const resultsContainer = document.getElementById("search-results-container");
 
-    
     if (!searchInput || !resultsContainer) {
         return;
     }
 
-    let debounceTimer; 
+    let debounceTimer;
+
+    // --- LÓGICA 1: EXIBIR SUGESTÕES ENQUANTO O USUÁRIO DIGITA ---
 
     /**
-     * Função que recebe a lista de livros (em formato JSON) e a desenha na tela.
+     * Função que recebe a lista de livros e a desenha como sugestões.
      * @param {Array} books - A lista de livros retornada pela API.
      */
     const renderSuggestions = (books) => {
         resultsContainer.innerHTML = ''; // Limpa os resultados anteriores
 
-        // Se a lista de livros estiver vazia, mostra uma mensagem.
         if (books.length === 0) {
             resultsContainer.innerHTML = '<div class="no-results-suggestion">Nenhum resultado encontrado.</div>';
             return;
         }
 
-        // Cria o HTML para cada livro na lista
         const booksHtml = books.map(livro => `
             <a href="#" class="result-item">
                 <img src="${livro.capaUrl || '/img/placeholder.png'}" alt="Capa de ${livro.nome}" />
@@ -37,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     
     /**
-     * Função que faz a chamada para a API no backend.
+     * Função que faz a chamada para a API no backend para buscar as sugestões.
      * @param {string} query - O texto que o usuário digitou.
      */
     const performSearch = async (query) => {
@@ -47,15 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
+            // AQUI FAZ A CHAMADA PARA A API (endpoint real-time)
             const response = await fetch(`/api/livros/search?q=${encodeURIComponent(query)}`);
             if (!response.ok) {
                 throw new Error('Erro ao buscar os livros.');
             }
             
-        
             const pageData = await response.json(); 
-            
-            const books = pageData.content;        
+            const books = pageData.content;
             
             resultsContainer.style.display = "block"; 
             renderSuggestions(books);
@@ -67,19 +65,32 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Listener para o evento 'input' (digitar)
     searchInput.addEventListener("input", (event) => {
         const query = event.target.value.trim();
-        
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
             performSearch(query);
         }, 150); 
     });
 
+    // Listener para esconder as sugestões se o usuário clicar fora
     document.addEventListener("click", (event) => {
-
         if (event.isTrusted && !event.target.closest('.search-container')) {
             resultsContainer.style.display = "none";
+        }
+    });
+
+    // --- LÓGICA 2: REDIRECIONAR AO PRESSIONAR ENTER ---
+
+    // Listener para o evento 'keypress' (pressionar Enter)
+    searchInput.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            const query = searchInput.value.trim();
+            if (query.length > 0) {
+                // AQUI FAZ O REDIRECIONAMENTO para a página principal com a busca
+                window.location.href = `/home?q=${encodeURIComponent(query)}`;
+            }
         }
     });
 });

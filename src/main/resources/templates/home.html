@@ -1,189 +1,301 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Início | Biblioteca Online</title>
+    
     <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
-    <script th:src="@{/js/script.js}" defer></script>
-    <script th:src="@{/js/home-search.js}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  </head>
 
-  <body id="home-page">
+    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/search-autor-genero.css}" />
+</head>
+
+<body id="home-page">
     
-    <div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/novo-header :: header}"></div>
 
-    <section class="home" id="home">
-      <div class="home-content">
-        <div class="home-text">
-          <h2 class="heading">Biblioteca on-line</h2>
-          <p>
-            Aqui você encontra um espaço aberto ao conhecimento, com livros
-            gratuitos e de acesso legal, pensados para leitores de todas as
-            idades e interesses. Nosso objetivo é incentivar a leitura e a
-            partilha de saberes, sempre com respeito aos direitos autorais e à
-            valorização da literatura. Além de explorar diferentes gêneros e
-            autores, você também pode publicar sua própria obra e compartilhá-la
-            com outros leitores.
-          </p>
-          <div class="home-btn-group">
-            <a href="#emalta" class="btn">Leia Agora</a>
-            <a href="#" class="btn" id="open-popup-btn">Enviar Livro</a>
-          </div>
+    <section class="home" id="home" th:if="${!isAutorSearch}">
+        <div class="home-content">
+            <div class="home-text">
+                <h2 class="heading">Biblioteca on-line</h2>
+                <p>
+                    Aqui você encontra um espaço aberto ao conhecimento, com livros
+                    gratuitos e de acesso legal, pensados para leitores de todas as
+                    as idades e interesses. Nosso objetivo é incentivar a leitura e a
+                    partilha de saberes, sempre com respeito aos direitos autorais e à
+                    valorização da literatura. Além de explorar diferentes gêneros e
+                    autores, você também pode publicar sua própria obra e compartilhá-la
+                    com outros leitores.
+                </p>
+                <div class="home-btn-group">
+                    <a href="#emalta" class="btn">Leia Agora</a>
+                    <a href="#" class="btn" id="open-popup-btn">Enviar Livro</a>
+                </div>
 
-          <div id="popup-overlay" class="popup-overlay">
-            <div class="popup-content">
-              <button id="close-popup-btn" class="close-btn" title="Fechar">&times;</button>
-              <h2>Envie um livro para nós!</h2>
-              <p>Nossa equipe irá avaliar e logo iremos te responder via e-mail.</p>
-              <form id="livro-form">
-                  <div class="form-group">
-                      <label for="email">E-mail</label>
-                      <input type="email" id="email" placeholder="seuemail@exemplo.com" required />
-                  </div>
-                  <div class="form-group">
-                      <label for="nome-completo">Nome Completo</label>
-                      <input type="text" id="nome-completo" placeholder="Seu nome aqui" required />
-                  </div>
-                  <div class="form-group">
-                      <label for="nome-livro">Nome do Livro</label>
-                      <input type="text" id="nome-livro" placeholder="Título do livro" required />
-                  </div>
-                  <div class="form-group">
-                      <label for="nome-autor">Nome do Autor</label>
-                      <input type="text" id="nome-autor" placeholder="Nome de quem escreveu" required />
-                  </div>
-                  <div class="form-group">
-                      <label for="edicao">Edição</label>
-                      <input type="text" id="edicao" placeholder="Ex: 1ª Edição" required />
-                  </div>
-                  <div class="form-group">
-                      <label for="capa-livro">Capa do Livro (arquivo .png)</label>
-                      <input type="file" id="capa-livro" accept=".png, .jpg, .jpeg" required />
-                  </div>
-                  <div class="form-group">
-                      <label for="sinopse">Sinopse</label>
-                      <textarea id="sinopse" rows="4" placeholder="Descreva a história do livro..." required></textarea>
-                  </div>
-                  <div class="form-group radio-group">
-                      <label>Este livro é de sua autoria?</label>
-                      <div class="radio-group-options">
-                          <div class="radio-option">
-                              <input type="radio" id="autoria-sim" name="autoria" value="sim" required />
-                              <label for="autoria-sim">Sim</label>
-                          </div>
-                          <div class="radio-option">
-                              <input type="radio" id="autoria-nao" name="autoria" value="nao" />
-                              <label for="autoria-nao">Não</label>
-                          </div>
-                      </div>
-                  </div>
-                  <button type="submit" class="btn">Enviar Avaliação</button>
-              </form>
+                <div id="popup-overlay" class="popup-overlay">
+                    <div class="popup-content">
+                        <button id="close-popup-btn" class="close-btn" title="Fechar">&times;</button>
+                        <h2>Envie um livro para nós!</h2>
+                        <p>Nossa equipe irá avaliar e logo iremos te responder via e-mail.</p>
+                        <form id="livro-form">
+                            <div class="form-group">
+                                <label for="email">E-mail</label>
+                                <input type="email" id="email" placeholder="seuemail@exemplo.com" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="nome-completo">Nome Completo</label>
+                                <input type="text" id="nome-completo" placeholder="Seu nome aqui" required />
+                            </div>
+                            <button type="submit" class="btn">Enviar Avaliação</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="home-img">
+                <img id="home-image" th:src="@{/img/estante.png}" alt="Estante de livros"/>
+            </div>
         </div>
-        <div class="home-img">
-          <img id="home-image" th:src="@{/img/estante.png}" alt="Estante de livros"/>
-        </div>
-      </div>
     </section>
 
-    <section class="emalta" id="emalta">
-      <h2 class="heading">Em alta esse mês</h2>
-      <h1>Esses foram os livros mais lidos esse mês pelos usuários</h1>
-      <div class="slider">
-        <div class="list">
-          <div class="item" th:each="livro : ${livrosEmAlta}">
-            <div class="card">
-              <div class="card-image-container">
-                <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
-                <button class="like-btn" aria-label="Curtir">
-                  <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                </button>
-              </div>
-              <div class="card-content">
-                <p class="card-title" th:text="${livro.nome}">Título do Livro</p>
-                <p class="card-author" th:text="${livro.autorNome}">Autor do Livro</p>
-                <button class="details-btn">Detalhes</button>
-              </div>
+    <div th:if="${isSearch}">
+        <section class="search-results-section" style="padding-bottom: 4rem; text-align: center;">
+            <h2 class="heading" style="text-align: center; display: inline-block;">Resultados para "<span th:text="${termoBusca}"></span>"</h2>
+            <div th:if="${resultadosPesquisa.content.empty}"><p class="text-center">Nenhum resultado encontrado.</p></div>
+        </section>
+        
+        <div th:unless="${resultadosPesquisa.content.empty}" class="slider single-slider-container">
+            <div class="list">
+                <div class="item" th:each="livro : ${resultadosPesquisa.content}">
+                    <div class="card">
+                        <div class="card-image-container"><img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" /></div>
+                        <div class="card-content">
+                            <p class="card-title" th:text="${livro.nome}"></p>
+                            <a th:href="@{/autor/{id}(id=${livro.autorId})}" class="card-author-link"><p class="card-author" th:text="${livro.autorNome}"></p></a>
+                            <a th:href="@{/livros/{id}(id=${livro.id})}" class="details-btn">Detalhes</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="buttons">
-          <button class="prev-btn">&#10094;</button>
-          <button class="next-btn">&#10095;</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="recentes" id="recentes">
-      <h2 class="heading">Mais recentes</h2>
-      <h1>Esses foram os livros recém publicados</h1>
-      <div class="slider">
-        <div class="list">
-          <div class="item" th:each="livro : ${livrosRecentes}">
-            <div class="card">
-              <div class="card-image-container">
-                <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
-                <button class="like-btn" aria-label="Curtir">
-                   <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                </button>
-              </div>
-              <div class="card-content">
-                <p class="card-title" th:text="${livro.nome}">Título do Livro</p>
-                <p class="card-author" th:text="${livro.autorNome}">Autor do Livro</p>
-                <button class="details-btn">Detalhes</button>
-              </div>
+            <div class="buttons">
+                <button class="prev-btn">&#10094;</button>
+                <button class="next-btn">&#10095;</button>
             </div>
-          </div>
-        </div>
-        <div class="buttons">
-          <button class="prev-btn">&#10094;</button>
-          <button class="next-btn">&#10095;</button>
-        </div>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-about">
-          <h2>Sobre</h2>
-          <p>
-            Biblioteca online é uma plataforma digital que oferece acesso
-            gratuito a uma vasta coleção de livros em diversos gêneros e
-            formatos. Nosso objetivo é promover a leitura e o compartilhamento
-            de conhecimento.
-          </p>
-          <img
-            th:src="@{/img/logohome.png}"
-            alt="Logo Biblioteca"
-            class="footer-logo"
-          />
         </div>
 
-        <div class="footer-contacts">
-          <h2>Contatos</h2>
-          <ul>
-            <li><i class="fas fa-envelope"></i> elivrosonline@gmail.com</li>
-            <li><i class="fab fa-instagram"></i> bibliotecaonline.proj</li>
-            <li><i class="fab fa-linkedin"></i> Projeto Biblioteca Online</li>
-            <li><i class="fab fa-github"></i> BibliotecaOnline</li>
-          </ul>
-        </div>
-      </div>
+        <nav class="pagination-container single-slider-container" aria-label="Navegação de páginas" th:if="${resultadosPesquisa.totalPages > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${resultadosPesquisa.first} ? 'disabled'"><a class="page-link" th:href="@{/home(q=${termoBusca}, page=${resultadosPesquisa.number - 1})}">&laquo;</a></li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, resultadosPesquisa.totalPages - 1)}" th:classappend="${i == resultadosPesquisa.number} ? 'active'"><a class="page-link" th:href="@{/home(q=${termoBusca}, page=${i})}" th:text="${i + 1}"></a></li>
+                <li class="page-item" th:classappend="${resultadosPesquisa.last} ? 'disabled'"><a class="page-link" th:href="@{/home(q=${termoBusca}, page=${resultadosPesquisa.number + 1})}">&raquo;</a></li>
+            </ul>
+        </nav>
+    </div>
 
-      <div class="copyright-container">
-        <p class="copyright">
-          Copyright © 2024 Todos os direitos Reservados - Biblioteca Online
-        </p>
-      </div>
-    </footer>
-  </body>
+    <div th:if="${isGeneroSearch}">
+        <section class="genre-results-section" style="padding-bottom: 4rem; text-align: center;">
+            <h2 class="heading" th:text="'Livros de ' + ${genero}" style="text-align: center; display: inline-block;"></h2>
+            <div th:if="${resultadosGenero.content.empty}"><p class="text-center">Nenhum livro encontrado neste gênero.</p></div>
+        </section>
+        
+        <div th:unless="${resultadosGenero.content.empty}" class="slider single-slider-container">
+            <div class="list">
+                <div class="item" th:each="livro : ${resultadosGenero.content}">
+                    <div class="card">
+                        <div class="card-image-container"><img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" /></div>
+                        <div class="card-content">
+                            <p class="card-title" th:text="${livro.nome}"></p>
+                            <a th:href="@{/autor/{id}(id=${livro.autorId})}" class="card-author-link"><p class="card-author" th:text="${livro.autorNome}"></p></a>
+                            <a th:href="@{/livros/{id}(id=${livro.id})}" class="details-btn">Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="prev-btn">&#10094;</button>
+                <button class="next-btn">&#10095;</button>
+            </div>
+        </div>
+
+        <nav class="pagination-container single-slider-container" aria-label="Navegação de páginas" th:if="${resultadosGenero.totalPages > 1}">
+             <ul class="pagination">
+                <li class="page-item" th:classappend="${resultadosGenero.first} ? 'disabled'"><a class="page-link" th:href="@{/genero/{genero}(genero=${genero}, page=${resultadosGenero.number - 1})}">&laquo;</a></li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, resultadosGenero.totalPages - 1)}" th:classappend="${i == resultadosGenero.number} ? 'active'"><a class="page-link" th:href="@{/genero/{genero}(genero=${genero}, page=${i})}" th:text="${i + 1}"></a></li>
+                <li class="page-item" th:classappend="${resultadosGenero.last} ? 'disabled'"><a class="page-link" th:href="@{/genero/{genero}(genero=${genero}, page=${resultadosGenero.number + 1})}">&raquo;</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div th:if="${isAutorSearch}">
+        <section class="author-results-container">
+            <div class="author-photo-column"><img th:src="@{${autorFotoUrl} ?: '/img/user.png'}" alt="Foto do Autor"/></div>
+            <div class="author-content-column">
+                <h2 class="heading">Livros de <span th:text="${autorNome}"></span></h2>
+                <p class="author-description" th:text="${autorDescricao}"></p>
+                <div th:if="${resultadosAutor.content.empty}"><p class="text-center">Nenhum livro encontrado para este autor.</p></div>
+            </div>
+        </section>
+
+        <div th:unless="${resultadosAutor.content.empty}" class="slider single-slider-container">
+            <div class="list">
+                <div class="item" th:each="livro : ${resultadosAutor.content}">
+                    <div class="card">
+                         <div class="card-image-container"><img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" /></div>
+                         <div class="card-content">
+                            <p class="card-title" th:text="${livro.nome}"></p>
+                            <a th:href="@{/autor/{id}(id=${livro.autorId})}" class="card-author-link"><p class="card-author" th:text="${livro.autorNome}"></p></a>
+                            <a th:href="@{/livros/{id}(id=${livro.id})}" class="details-btn">Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="prev-btn">&#10094;</button>
+                <button class="next-btn">&#10095;</button>
+            </div>
+        </div>
+        
+        <nav class="pagination-container single-slider-container" aria-label="Navegação de páginas" th:if="${resultadosAutor.totalPages > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${resultadosAutor.first} ? 'disabled'"><a class="page-link" th:href="@{/autor/{id}(id=${autorId}, page=${resultadosAutor.number - 1})}">&laquo;</a></li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, resultadosAutor.totalPages - 1)}" th:classappend="${i == resultadosAutor.number} ? 'active'"><a class="page-link" th:href="@{/autor/{id}(id=${autorId}, page=${i})}" th:text="${i + 1}"></a></li>
+                <li class="page-item" th:classappend="${resultadosAutor.last} ? 'disabled'"><a class="page-link" th:href="@{/autor/{id}(id=${autorId}, page=${resultadosAutor.number + 1})}">&raquo;</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div th:unless="${isSearch or isGeneroSearch or isAutorSearch}">
+        <section class="emalta" id="emalta">
+            <h2 class="heading">Em alta esse mês</h2>
+            <h1>Esses foram os livros mais lidos esse mês pelos usuários</h1>
+            <div class="slider">
+                <div class="list">
+                    <div class="item" th:each="livro : ${livrosEmAlta}">
+                        <div class="card">
+                            <div class="card-image-container">
+                                <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
+                                <button class="like-btn" aria-label="Curtir">
+                                    <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                                </button>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-title" th:text="${livro.nome}">Título do Livro</p>
+                                <a th:href="@{/autor/{id}(id=${livro.autorId})}" class="card-author-link">
+                                    <p class="card-author" th:text="${livro.autorNome}">Autor do Livro</p>
+                                </a>
+                                <a th:href="@{/livros/{id}(id=${livro.id})}" class="details-btn">Detalhes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="prev-btn">&#10094;</button>
+                    <button class="next-btn">&#10095;</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="recentes" id="recentes">
+            <h2 class="heading">Mais recentes</h2>
+            <h1>Esses foram os livros recém publicados</h1>
+            <div class="slider">
+                <div class="list">
+                    <div class="item" th:each="livro : ${livrosRecentes}">
+                        <div class="card">
+                            <div class="card-image-container">
+                                <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
+                                <button class="like-btn" aria-label="Curtir">
+                                    <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                                </button>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-title" th:text="${livro.nome}">Título do Livro</p>
+                                <a th:href="@{/autor/{id}(id=${livro.autorId})}" class="card-author-link">
+                                    <p class="card-author" th:text="${livro.autorNome}">Autor do Livro</p>
+                                </a>
+                                <a th:href="@{/livros/{id}(id=${livro.id})}" class="details-btn">Detalhes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="prev-btn">&#10094;</button>
+                    <button class="next-btn">&#10095;</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="terror" id="terror">
+            <h2 class="heading">Terror</h2>
+            <h1>Livros de terror mais amados</h1>
+            <div class="slider">
+                <div class="list">
+                    <div class="item" th:each="livro : ${livrosTerror}">
+                        <div class="card">
+                            <div class="card-image-container">
+                                <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
+                                <button class="like-btn" aria-label="Curtir">
+                                    <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                                </button>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-title" th:text="${livro.nome}">Título do Livro</p>
+                                <a th:href="@{/autor/{id}(id=${livro.autorId})}" class="card-author-link">
+                                    <p class="card-author" th:text="${livro.autorNome}">Autor do Livro</p>
+                                </a>
+                                <a th:href="@{/livros/{id}(id=${livro.id})}" class="details-btn">Detalhes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="prev-btn">&#10094;</button>
+                    <button class="next-btn">&#10095;</button>
+                </div>
+            </div>
+        </section>
+        
+        <section class="romance" id="romance">
+            <h2 class="heading">Romance</h2>
+            <h1>Livros de romance mais amados</h1>
+            <div class="slider">
+                <div class="list">
+                    <div class="item" th:each="livro : ${livrosRomance}">
+                        <div class="card">
+                            <div class="card-image-container">
+                                <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
+                                <button class="like-btn" aria-label="Curtir">
+                                    <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                                </button>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-title" th:text="${livro.nome}">Título do Livro</p>
+                                <a th:href="@{/autor/{id}(id=${livro.autorId})}" class="card-author-link">
+                                    <p class="card-author" th:text="${livro.autorNome}">Autor do Livro</p>
+                                </a>
+                                <a th:href="@{/livros/{id}(id=${livro.id})}" class="details-btn">Detalhes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="prev-btn">&#10094;</button>
+                    <button class="next-btn">&#10095;</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/novo-footer :: footer}"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/home-search.js}" defer></script>
+    <script th:src="@{/js/script.js}" defer></script>
+    <script type="module" th:src="@{/js/script.js}"></script>
+
+</body>
 </html>

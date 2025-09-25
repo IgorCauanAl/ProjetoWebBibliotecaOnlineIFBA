@@ -1,86 +1,101 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-  <head>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gerenciar Livros | Biblioteca Online</title>
-    
+
     <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/css/gerenciar-livros.css}" />
-    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
-    <script th:src="@{/js/home-search.js}" defer></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  </head>
 
-  <body>
-    <div th:replace="~{fragments/header :: header}"></div>
+    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
+    
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/gerenciar-livros.css}" />
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/novo-header :: header}"></div>
+
 
     <main class="publicar-container">
-      <div class="page-header-publicar">
-        <a th:href="@{/perfil-admin}" class="back-arrow" title="Voltar">
-          <i class="bx bx-arrow-back"></i>
-        </a>
-        <h1>Gerenciar livros</h1>
-      </div>
-      
-      <div class="actions">
-        <a class="btn add-book-btn" th:href="@{/admin/livros/novo}">Adicionar Livro</a>
-      </div>
-      
-      <div class="search-table-container">
-        <form th:action="@{/admin/livros}" method="get" class="search-form">
-            <input id="table-search-input" type="text" name="keyword" th:value="${keyword}" placeholder="Pesquisar por título ou autor..." />
-            <button type="submit" class="search-button" style="display: none;">Buscar</button>
-        </form>
-      </div>
+        <div class="page-header-publicar">
+            <a th:href="@{/perfil-admin}" class="back-arrow" title="Voltar">
+                <i class="bx bx-arrow-back"></i>
+            </a>
+            <h1>Gerenciar livros</h1>
+        </div>
+        
+        <div class="actions">
+            <a class="btn add-book-btn" th:href="@{/admin/livros/novo}">Adicionar Livro</a>
+            
+            <button class="btn export-books-btn" type="button">
+                Exportar Livros
+            </button>
+        </div>
+        
+        <div class="search-table-container">
+            <form th:action="@{/admin/livros}" method="get" class="search-form">
+                <input id="table-search-input" type="text" name="keyword" th:value="${keyword}" placeholder="Pesquisar por título ou autor na tabela..." />
+                <button type="submit" class="search-button" style="display: none;">Buscar</button>
+            </form>
+        </div>
 
-      <div class="table-container">
-        <table class="book-table">
-          <thead>
-            <tr>
-              <th>Capa</th>
-              <th>Nome do Livro</th>
-              <th>Autor</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="book-list">
-            <tr th:each="livro : ${paginaDeLivros.content}">
-              <td>
-                <img th:src="@{${livro.capaUrl}}" alt="Capa do livro" class="book-cover" />
-              </td>
-              <td th:text="${livro.nome}">Título do Livro</td>
-              <td th:text="${livro.autorNome}">Autor do Livro</td>
-              <td class="action-buttons">
-                <a th:href="@{/admin/livros/editar/{id}(id=${livro.id})}" class="edit-btn" title="Editar">
-                  <i class="fa-solid fa-pencil"></i>
-                </a>
-                <a th:href="@{/admin/livros/deletar/{id}(id=${livro.id})}" class="delete-btn" title="Deletar">
-                  <i class="fa-solid fa-trash"></i>
-                </a>
-              </td>
-            </tr>
-            <tr th:if="${paginaDeLivros.empty}">
-                <td colspan="4" style="text-align: center; padding: 20px;">Nenhum livro encontrado.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="table-container">
+            <table class="book-table">
+                <thead>
+                    <tr>
+                        <th>Capa</th>
+                        <th>Nome do Livro</th>
+                        <th>Autor</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="book-list">
+                    <tr th:each="livro : ${paginaDeLivros.content}">
+                        <td>
+                            <img th:src="@{${livro.capaUrl}}" alt="Capa do livro" class="book-cover" />
+                        </td>
+                        <td th:text="${livro.nome}">Título do Livro</td> 
+                        <td th:text="${livro.autorNome}">Autor do Livro</td>
+                        <td class="action-buttons">
+                            <a th:href="@{/admin/livros/editar/{id}(id=${livro.id})}" class="edit-btn" title="Editar">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
+                            <a th:href="@{/admin/livros/deletar/{id}(id=${livro.id})}" class="delete-btn" title="Deletar">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${paginaDeLivros.empty}">
+                        <td colspan="4" style="text-align: center; padding: 20px;">Nenhum livro encontrado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-      <nav class="pagination-container" aria-label="Navegação de páginas" th:if="${paginaDeLivros.totalPages > 1}">
-          <ul class="pagination">
-              <li class="page-item" th:each="i : ${#numbers.sequence(0, paginaDeLivros.totalPages - 1)}" th:classappend="${i == paginaDeLivros.number} ? 'active'">
-                  <a class="page-link" th:href="@{/admin/livros(page=${i}, size=${paginaDeLivros.size}, keyword=${keyword})}" th:text="${i + 1}"></a>
-              </li>
-          </ul>
-      </nav>
+        <nav class="pagination-container" aria-label="Navegação de páginas" th:if="${paginaDeLivros.totalPages > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, paginaDeLivros.totalPages - 1)}" th:classappend="${i == paginaDeLivros.number} ? 'active'">
+                    <a class="page-link" th:href="@{/admin/livros(page=${i}, size=${paginaDeLivros.size}, keyword=${keyword})}" th:text="${i + 1}"></a>
+                </li>
+            </ul>
+        </nav>
     </main>
 
-    <footer class="footer">
-      </footer>
+    <div th:replace="~{fragments/novo-footer :: footer}"></div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    </body>
+    <script th:src="@{/js/home-search.js}" defer></script>
+    
+    <script type="module" th:src="@{/js/script.js}"></script>
+    
+    <script type="module" th:src="@{/js/gerenciar-livros.js}"></script>
+
+</body>
 </html>

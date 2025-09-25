@@ -68,13 +68,13 @@ public class LivroController {
         return "admin/publicar-livro";
     }
 
-    // O método salvarLivro e salvarArquivo permanecem iguais
     @PostMapping("/salvar")
     public String salvarLivro(
             @Valid @ModelAttribute("livroDTO") LivroDTO livroDTO,
             BindingResult result,
             @RequestParam("capaFile") MultipartFile capaFile,
             @RequestParam("pdfFile") MultipartFile pdfFile,
+            @RequestParam(name = "novoAutorFoto", required = false) MultipartFile novoAutorFoto,
             Model model) {
 
         if (result.hasErrors()) {
@@ -86,7 +86,6 @@ public class LivroController {
         if (livroDTO.getAutorId() == null && (livroDTO.getNovoAutorNome() == null || livroDTO.getNovoAutorNome().isBlank())) {
              result.rejectValue("autorId", "error.autorId", "Você deve selecionar um autor existente ou cadastrar um novo.");
         }
-
 
         if (livroDTO.getId() == null) {
             if (capaFile.isEmpty()) {
@@ -113,6 +112,12 @@ public class LivroController {
                 livroDTO.setPdfUrl(pdfUrl);
             }
 
+            
+            if (novoAutorFoto != null && !novoAutorFoto.isEmpty()) {
+                String fotoUrl = salvarArquivo(novoAutorFoto, "uploads/autores");
+                livroDTO.setNovoAutorFotoUrl(fotoUrl);
+            }
+
             livroService.salvar(livroDTO);
             return "redirect:/admin/livros";
 
@@ -131,13 +136,19 @@ public class LivroController {
     
     private String salvarArquivo(MultipartFile arquivo, String diretorio) throws IOException {
         String nomeOriginal = arquivo.getOriginalFilename();
-        if (nomeOriginal == null) {
-            nomeOriginal = "arquivo_sem_nome_" + UUID.randomUUID();
+        if (nomeOriginal == null || nomeOriginal.isBlank()) {
+            nomeOriginal = "arquivo_sem_nome";
         }
         
-        String nomeArquivo = UUID.randomUUID() + "_" + nomeOriginal;
-        Path caminhoCompleto = Paths.get(diretorio, nomeArquivo);
-        Files.createDirectories(caminhoCompleto.getParent());
+        
+        String nomeBase = Paths.get(nomeOriginal).getFileName().toString();
+        String nomeArquivo = UUID.randomUUID() + "_" + nomeBase;
+        
+        Path caminhoDiretorio = Paths.get(diretorio);
+        Files.createDirectories(caminhoDiretorio);
+
+        Path caminhoCompleto = caminhoDiretorio.resolve(nomeArquivo);
+        
         Files.copy(arquivo.getInputStream(), caminhoCompleto, StandardCopyOption.REPLACE_EXISTING);
         
         return "/" + diretorio + "/" + nomeArquivo;

@@ -393,3 +393,62 @@
 .logout-section .btn:active {
   transform: translateY(-1px);
 }
+
+@media (max-width: 768px) {
+  .wrap {
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+  }
+
+  .page-title {
+    margin: 8rem 0 2rem 0;
+    text-align: center;
+  }
+
+  .page-title h1 {
+    font-size: 2.8rem;
+  }
+  .profile-card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 1.2rem;
+  }
+
+  .details {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+
+  .card.pad h2 {
+    text-align: center;
+  }
+  .section h3 {
+    text-align: center;
+  }
+
+  .swal2-actions {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 1rem !important;
+    width: 100% !important;
+  }
+
+  .swal2-actions .swal2-styled {
+    flex: 1;
+    margin: 0 !important;
+    min-width: auto !important;
+    font-size: 1.5rem !important;
+  }
+  .swal2-confirm.swal2-styled {
+    background-color: #d94a4a !important;
+    border-color: #d94a4a !important;
+    font-size: 1.5rem !important;
+  }
+  .swal2-confirm.swal2-styled:hover {
+    background-color: #c43737 !important;
+  }
+  .swal2-popup {
+    height: auto !important;
+  }
+}
