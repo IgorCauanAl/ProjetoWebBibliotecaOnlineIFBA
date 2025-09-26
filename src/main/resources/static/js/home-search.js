@@ -8,14 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let debounceTimer;
 
-    // --- LÓGICA 1: EXIBIR SUGESTÕES ENQUANTO O USUÁRIO DIGITA ---
-
-    /**
-     * Função que recebe a lista de livros e a desenha como sugestões.
-     * @param {Array} books - A lista de livros retornada pela API.
-     */
     const renderSuggestions = (books) => {
-        resultsContainer.innerHTML = ''; // Limpa os resultados anteriores
+        resultsContainer.innerHTML = ''; 
 
         if (books.length === 0) {
             resultsContainer.innerHTML = '<div class="no-results-suggestion">Nenhum resultado encontrado.</div>';
@@ -23,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const booksHtml = books.map(livro => `
-            <a href="#" class="result-item">
+            <a href="/livros/${livro.id}" class="result-item">
                 <img src="${livro.capaUrl || '/img/placeholder.png'}" alt="Capa de ${livro.nome}" />
                 <div class="result-item-info">
                     <span class="title">${livro.nome}</span>

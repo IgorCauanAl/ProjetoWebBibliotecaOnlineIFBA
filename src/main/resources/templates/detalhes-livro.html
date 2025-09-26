@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
     <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
 
     <title th:text="${livro.nome} + ' | Biblioteca Online'">Livros | Biblioteca Online</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
@@ -80,6 +81,7 @@
     <div th:replace="~{fragments/novo-footer :: footer}"></div>
 
     <script type="module" th:src="@{/js/livros.js}"></script>
+    <script type="module" th:src="@{/js/home-search.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </body>
 </html>
