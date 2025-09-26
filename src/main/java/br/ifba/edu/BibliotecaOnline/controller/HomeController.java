@@ -5,6 +5,9 @@ import br.ifba.edu.BibliotecaOnline.entities.Autor;
 import br.ifba.edu.BibliotecaOnline.model.GeneroEnum;
 import br.ifba.edu.BibliotecaOnline.service.AutorService;
 import br.ifba.edu.BibliotecaOnline.service.LivroService;
+import br.ifba.edu.BibliotecaOnline.service.FileStorageService;
+import br.ifba.edu.BibliotecaOnline.excecao.FileDownloadException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,8 +19,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+
 import java.util.NoSuchElementException;
-import java.util.Optional; // Adicionar import
+import java.util.Optional; 
 
 @Controller
 @RequiredArgsConstructor
@@ -25,6 +31,7 @@ public class HomeController {
 
     private final LivroService livroService;
     private final AutorService autorService;
+    private final FileStorageService fileStorageService;
 
     @GetMapping({"/", "/home"})
     public String exibirHome(
@@ -53,7 +60,7 @@ public class HomeController {
             model.addAttribute("isAutorSearch", false);
 
         } else {
-            // Lógica para a home padrão (sem busca)
+            
             model.addAttribute("livrosEmAlta", livroService.listar());
             model.addAttribute("livrosRecentes", livroService.listarMaisRecentes());
             model.addAttribute("livrosTerror", livroService.listarPorGenero(GeneroEnum.TERROR));
@@ -66,8 +73,6 @@ public class HomeController {
         return "home";
     }
 
-    // ... métodos exibirLivrosPorGenero e exibirLivrosPorAutor permanecem iguais ...
-    
     @GetMapping("/genero/{genero}")
     public String exibirLivrosPorGenero(
             @PathVariable("genero") GeneroEnum genero,
@@ -125,11 +130,20 @@ public class HomeController {
             Autor autor = autorService.buscarPorId(livro.getAutorId()); 
 
             model.addAttribute("livro", livro);
-            model.addAttribute("autor", autor); // ADICIONA O AUTOR AO MODELO
+            model.addAttribute("autor", autor); 
 
             return "detalhes-livro";
         } catch (RuntimeException e) {
             return "redirect:/home";
+        }
+    }
+
+    @GetMapping("/livros/download/{id}")
+    public ResponseEntity<Resource> downloadPdf(@PathVariable Long id) {
+        try {
+            return fileStorageService.downloadPdf(id);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }

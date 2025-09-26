@@ -37,7 +37,7 @@
 
                 <div class="livro-btn-group">
                     <a th:href="@{${livro.pdfUrl}}" target="_blank" class="btn">Leia Agora</a>
-                    <a th:href="@{${livro.pdfUrl}}" download class="btn">Baixar PDF</a>
+                    <a th:href="@{/livros/download/{id}(id=${livro.id})}" class="btn">Baixar PDF</a>
                 </div>
             </div>
         </div>

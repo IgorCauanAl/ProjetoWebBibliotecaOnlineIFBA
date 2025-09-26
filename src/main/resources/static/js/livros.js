@@ -13,21 +13,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentRating = 0; // Variável para guardar a nota (estrelas) selecionada
 
-    // --- Funções ---
+    
 
-    /**
-     * Cria o HTML para as estrelas de avaliação.
-     */
     function renderStars(rating = 0) {
-        ratingStarsContainer.innerHTML = ''; // Limpa as estrelas atuais
+        ratingStarsContainer.innerHTML = ''; 
         for (let i = 1; i <= 5; i++) {
             const star = document.createElement('i');
             star.classList.add('fa-solid', 'fa-star');
-            // Pinta a estrela se ela for menor ou igual à nota atual
-            if (i <= rating) {
-                star.style.color = '#ffd700';
-            }
-            star.dataset.value = i; // Guarda o valor da estrela (1, 2, 3, 4, 5)
+            
+            
+            star.style.color = i <= rating ? '#ffd700' : '#ccc';
+            
+            star.dataset.value = i;
             ratingStarsContainer.appendChild(star);
         }
     }
