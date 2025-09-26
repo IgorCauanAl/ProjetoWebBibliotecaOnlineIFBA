@@ -7,6 +7,10 @@ import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,10 +20,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 @Service
 @AllArgsConstructor
-public class ServiçosUsuariosPerfilService {
+public class ServicosUsuariosPerfilService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -84,5 +93,38 @@ public class ServiçosUsuariosPerfilService {
         SecurityContextHolder.clearContext();
 
     }
+
+    @Transactional
+    public String atualizarFotoPerfil(Long usuarioId, MultipartFile file) {
+        try {
+            if (file.isEmpty()) {
+                throw new RuntimeException("O arquivo enviado está vazio.");
+            }
+
+            // O ideal é pegar este caminho de um application.properties, como sugerido anteriormente
+            Path pastaDeUpload = Paths.get("uploads/fotos-perfil/");
+            if (!Files.exists(pastaDeUpload)) {
+                Files.createDirectories(pastaDeUpload);
+            }
+
+            String nomeArquivo = "usuario-" + usuarioId + "-" + System.currentTimeMillis() + "-" + file.getOriginalFilename();
+            
+            Files.copy(file.getInputStream(), pastaDeUpload.resolve(nomeArquivo), StandardCopyOption.REPLACE_EXISTING);
+
+            Usuario usuario = usuarioRepository.findById(usuarioId)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + usuarioId));
+            
+            String caminhoParaSalvar = "/uploads/fotos-perfil/" + nomeArquivo;
+
+            usuario.setFotoPerfil(caminhoParaSalvar);
+            usuarioRepository.save(usuario); // Agora o save está garantido pela transação
+
+            return caminhoParaSalvar;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Falha ao salvar a foto de perfil. Por favor, tente novamente.", e);
+        }
+    }
+
 
 }

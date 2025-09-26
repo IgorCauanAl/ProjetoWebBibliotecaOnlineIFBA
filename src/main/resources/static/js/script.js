@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const openPopupBtn = document.getElementById("open-popup-btn");
   const closePopupBtn = document.getElementById("close-popup-btn");
   const popupOverlay = document.getElementById("popup-overlay");
-  const livroForm = document.getElementById("livro-form");
+  const livroForm = document.getElementById("form-enviar-livro");
 
   const openPopup = () => {
     popupOverlay.classList.add("active");

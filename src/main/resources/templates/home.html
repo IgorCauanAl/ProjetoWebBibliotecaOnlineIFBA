@@ -43,14 +43,54 @@
                         <button id="close-popup-btn" class="close-btn" title="Fechar">&times;</button>
                         <h2>Envie um livro para nós!</h2>
                         <p>Nossa equipe irá avaliar e logo iremos te responder via e-mail.</p>
-                        <form id="livro-form">
+                        
+                        <form id="form-enviar-livro" th:action="@{/enviar-livro}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
                             <div class="form-group">
                                 <label for="email">E-mail</label>
-                                <input type="email" id="email" placeholder="seuemail@exemplo.com" required />
+                                <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required />
                             </div>
                             <div class="form-group">
                                 <label for="nome-completo">Nome Completo</label>
-                                <input type="text" id="nome-completo" placeholder="Seu nome aqui" required />
+                                <input type="text" id="nome-completo" name="nomeCompleto" placeholder="Seu nome aqui" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="nome-livro">Nome do Livro</label>
+                                <input type="text" id="nome-livro" name="nomeLivro" placeholder="Título do livro" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="nome-autor">Nome do Autor</label>
+                                <input type="text" id="nome-autor" name="nomeAutor" placeholder="Nome de quem escreveu" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="edicao">Edição</label>
+                                <input type="text" id="edicao" name="edicao" placeholder="Ex: 1ª Edição" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="capa-livro">Capa do Livro (arquivo .png)</label>
+                                <input type="file" id="capa-livro" name="capaLivro" accept=".png" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="documento-livro">Documento do Livro (arquivo .pdf)</label>
+                                <input type="file" id="documento-livro" name="documentoLivro" accept=".pdf" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="sinopse">Sinopse</label>
+                                <textarea id="sinopse" name="sinopse" rows="4" placeholder="Descreva a história do livro..." required></textarea>
+                            </div>
+                            <div class="form-group radio-group">
+                                <label>Este livro é de sua autoria?</label>
+                                <div class="radio-group-options">
+                                    <div class="radio-option">
+                                        <input type="radio" id="autoria-sim" name="autoria" value="sim" required />
+                                        <label for="autoria-sim">Sim</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="autoria-nao" name="autoria" value="nao" />
+                                        <label for="autoria-nao">Não</label>
+                                    </div>
+                                </div>
                             </div>
                             <button type="submit" class="btn">Enviar Avaliação</button>
                         </form>
@@ -296,7 +336,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script th:src="@{/js/home-search.js}" defer></script>
     <script th:src="@{/js/script.js}" defer></script>
-    <script type="module" th:src="@{/js/script.js}"></script>
 
 </body>
 </html>

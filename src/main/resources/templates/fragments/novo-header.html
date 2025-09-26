@@ -1,9 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 
     <header class="header" th:fragment="header">
-        <a th:href="@{/perfil}" class="logo" id="header-avatar">
+
+        <a th:href="@{/perfil}" class="logo" id="header-avatar" sec:authorize="isAuthenticated()">
+            <img th:src="@{${#authentication.principal.fotoPerfil} ?: '/img/user.png'}" 
+                 alt="Avatar do usuário" 
+                 class="header-avatar-img" />
+        </a>
+
+        <a th:href="@{/login}" class="logo" id="header-avatar-guest" sec:authorize="!isAuthenticated()">
             <i class="bx bx-user-circle" style="font-size: 50px; color: #2f3559"></i>
         </a>
 

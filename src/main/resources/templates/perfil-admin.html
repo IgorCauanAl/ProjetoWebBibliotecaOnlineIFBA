@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perfil Administrador | Biblioteca Online</title>
-    
+
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&family=Nunito:wght@400;600&display=swap" rel="stylesheet" />
@@ -26,7 +28,7 @@
 
         <section class="grid-top">
             <article class="card profile-card">
-                <div class="avatar" id="profile-avatar">
+                <div class="avatar" id="profile-avatar" th:data-user-id="${usuario.id}">
                     <img th:src="@{${usuario.fotoPerfil} ?: '/img/user.png'}" alt="Foto do usuário" class="avatar-img" />
                 </div>
                 <div class="profile-meta">
