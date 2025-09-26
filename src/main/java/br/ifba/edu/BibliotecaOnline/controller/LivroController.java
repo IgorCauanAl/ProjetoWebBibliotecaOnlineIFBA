@@ -1,7 +1,11 @@
 package br.ifba.edu.BibliotecaOnline.controller;
 
 import br.ifba.edu.BibliotecaOnline.DTO.LivroDTO;
-import br.ifba.edu.BibliotecaOnline.service.AutorService; 
+import br.ifba.edu.BibliotecaOnline.entities.Autor;
+import br.ifba.edu.BibliotecaOnline.repository.AutorRepository;
+import br.ifba.edu.BibliotecaOnline.service.AutorService;
+import br.ifba.edu.BibliotecaOnline.entities.LivroEntity;
+import br.ifba.edu.BibliotecaOnline.repository.LivroRepository;
 import br.ifba.edu.BibliotecaOnline.service.LivroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +30,9 @@ import java.util.UUID;
 public class LivroController {
 
     private final LivroService livroService;
-    private final AutorService autorService; // Injetar AutorService
+    private final AutorService autorService;
+    private final LivroRepository livroRepository;
+    private final AutorRepository autorRepository;
 
     @GetMapping
     public String exibirPaginaGerenciarLivros(Model model,
@@ -153,4 +159,20 @@ public class LivroController {
         
         return "/" + diretorio + "/" + nomeArquivo;
     }
+
+
+    //EndPoint para detalhes do livro
+    @GetMapping("/detalhesLivro/{id}")
+    public String detalhesLivro (@PathVariable Long id, Model model){
+        LivroEntity livro = livroRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado!"));
+
+        model.addAttribute("livro",livro);
+
+        return "livros";
+
+           }
+
+
+
 }

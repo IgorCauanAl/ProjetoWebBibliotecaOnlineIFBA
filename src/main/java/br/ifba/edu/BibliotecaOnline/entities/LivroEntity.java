@@ -45,7 +45,7 @@ public class LivroEntity {
     private GeneroEnum genero;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "autor_id", nullable = false) // Novo campo de relacionamento
+    @JoinColumn(name = "autor_id", nullable = true) // Novo campo de relacionamento
     private Autor autor;
 
 }
