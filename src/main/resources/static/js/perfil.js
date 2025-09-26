@@ -172,21 +172,71 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Lógica para o formulário de Editar Detalhes
+
     const formEditar = document.getElementById("form-editar-detalhes");
     if (formEditar) {
         formEditar.addEventListener("submit", async (e) => {
             e.preventDefault();
-            // Lógica para enviar os novos dados para o backend e atualizar a UI
-            await swalOK({
-                icon: "success",
-                title: "Informações atualizadas!",
-                text: "Seus dados foram salvos com sucesso.",
+
+            const nome = document.getElementById("det-nome").value.trim();
+            const email = document.getElementById("det-email").value.trim();
+
+            if (!nome || !email) {
+                await swalOK({
+                    icon: "warning",
+                    title: "Preencha todos os campos",
+                    text: "Digite nome e e-mail válidos.",
+                });
+                return;
+            }
+
+            // Monta o DTO
+            const dto = { nome, email };
+            const csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+            // Envia para o backend
+            const response = await fetch("/api/usuariosMudar/editarDetalhes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken
+                },
+                body: JSON.stringify(dto)
             });
-            // Atualizaria os campos na tela com os novos valores
-            const popup = document.getElementById("editar-detalhes");
-            if (popup) popup.classList.remove("active");
+
+            if (response.ok) {
+                await swalOK({
+                    icon: "success",
+                    title: "Informações atualizadas!",
+                    text: "Seus dados foram salvos com sucesso.",
+                });
+
+                const nomeField = document.querySelector(
+                    ".details .field:nth-child(1) div"
+                );
+                const emailField = document.querySelector(
+                    ".details .field:nth-child(2) div"
+                );
+                if (nomeField) nomeField.textContent = nome;
+                if (emailField) emailField.textContent = email;
+
+                const popup = document.getElementById("editar-detalhes");
+                if (popup) popup.classList.remove("active");
+
+                formEditar.reset();
+            } else {
+                const msg = await response.text();
+                await swalOK({
+                    icon: "error",
+                    title: "Erro",
+                    text: msg || "Não foi possível atualizar os dados."
+                });
+            }
         });
     }
+
+
+
 
     // Lógica para o upload da foto de perfil
     const fileInput = document.getElementById("upload-foto");
@@ -200,14 +250,41 @@ document.addEventListener("DOMContentLoaded", () => {
             const reader = new FileReader();
             reader.onload = async (e) => {
                 const src = e.target.result;
-                profileAvatarImg.src = src;
+                profileAvatarImg.src = URL.createObjectURL(file);
 
-                // Aqui você enviaria o 'file' para o backend para salvar
-                await swalOK({
-                    icon: "success",
-                    title: "Foto atualizada!",
-                    text: "Sua imagem de perfil foi alterada com sucesso.",
+
+                const formData = new FormData();
+                formData.append("file", file);
+
+                const userId = document.getElementById("profile-avatar").dataset.userId;
+
+                const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+                const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+                // Fetch para enviar as fotos para salvar
+                const response = await fetch(`/api/usuariosMudar/${userId}/foto`, {
+                    method: "POST",
+                    headers: {
+                        [csrfHeader]: csrfToken
+                    },
+                    body: formData
                 });
+
+                if (response.ok) {
+                    const msg = await response.text();
+                    await swalOK({
+                        icon: "success",
+                        title: "Foto atualizada!",
+                        text: msg
+                    });
+                } else {
+                    await swalOK({
+                        icon: "error",
+                        title: "Erro",
+                        text: "Não foi possível atualizar a foto."
+                    });
+                }
+
             };
             reader.readAsDataURL(file);
         });

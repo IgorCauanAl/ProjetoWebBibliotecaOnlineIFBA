@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perfil | Biblioteca Online</title>
-    
     <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&family=Nunito:wght@400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/perfil.css}" />
 </head>
@@ -25,7 +25,7 @@
 
         <section class="grid-top">
             <article class="card profile-card">
-                <div class="avatar" id="profile-avatar">
+                <div class="avatar" id="profile-avatar" th:data-user-id="${usuario.id}">
                     <img th:src="@{${usuario.fotoPerfil} ?: '/img/user.png'}" alt="Foto do usuário" class="avatar-img" />
                 </div>
                 <div class="profile-meta">
@@ -45,11 +45,11 @@
                 <div class="details">
                     <div class="field">
                         <b>Nome</b>
-                        <div th:text="${usuario.nome}">Nome do Usuário</div>
+                        <div id ="display-nome" th:text="${usuario.nome}">Nome do Usuário</div>
                     </div>
                     <div class="field">
                         <b>E-mail</b>
-                        <div th:text="${usuario.email}">email@exemplo.com</div>
+                        <div id = "display-email" th:text="${usuario.email}">email@exemplo.com</div>
                     </div>
                     <div class="field">
                         <b>Livros curtidos</b>

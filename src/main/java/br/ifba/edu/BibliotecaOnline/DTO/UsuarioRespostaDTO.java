@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UsuarioRespostaDTO {
     
-    private Long id; // <-- Adicione esta linha
+    private Long id;
     private String nome;
     private String email;
 
