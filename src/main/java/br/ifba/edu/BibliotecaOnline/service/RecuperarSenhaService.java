@@ -8,7 +8,6 @@ import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.repository.TokenSenhaRepository;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,42 +16,38 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-@AllArgsConstructor
+@AllArgsConstructor 
 public class RecuperarSenhaService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    
+    private final UsuarioRepository usuarioRepository;
+    private final TokenSenhaRepository tokenSenhaRepository;
+    private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private TokenSenhaRepository tokenSenhaRepository;
+    public void enviarCodigo(EmailRecuperacaoDTO emailDTO) {
 
-    @Autowired
-    private EmailService emailService;
+        Usuario u = usuarioRepository.findByEmail(emailDTO.getEmail())
+                .orElseThrow(() -> new RuntimeException("Email não encontrado"));
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+        String codigo = String.format("%06d", new Random().nextInt(1_000_000));
 
-    public void enviarCodigo (EmailRecuperacaoDTO emailDTO){
-        //Verificar se o email existe
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(emailDTO.getEmail());
+        Optional<TokenSenha> tokenExistenteOpt = tokenSenhaRepository.findByUsuario(u);
+        
+        TokenSenha tokenParaSalvar;
 
-        if(usuario.isEmpty()){
-            throw new RuntimeException("Email não encontrado");
+        if (tokenExistenteOpt.isPresent()) {
+            tokenParaSalvar = tokenExistenteOpt.get();
+            tokenParaSalvar.setCodigo(codigo);
+            tokenParaSalvar.setExpiracao(LocalDateTime.now().plusMinutes(15));
+        } else {
+            tokenParaSalvar = new TokenSenha();
+            tokenParaSalvar.setUsuario(u);
+            tokenParaSalvar.setCodigo(codigo);
+            tokenParaSalvar.setExpiracao(LocalDateTime.now().plusMinutes(15));
         }
 
-        //Extraindo usuario de optional para passar no set usuario
-        Usuario u = usuario.get();
-
-        //Criar o código de 6 digitos para ser enviado
-        String codigo = String.format("%06d", new Random().nextInt((1_000_000)));
-
-        //Atribuir o codigo ao atributo codigo e para o usuario da tabela token
-        TokenSenha tokenSenha = new TokenSenha();
-        tokenSenha.setCodigo(codigo);
-        tokenSenha.setUsuario(u);
-        tokenSenha.setExpiracao(LocalDateTime.now().plusMinutes(15));
-
-        tokenSenhaRepository.save(tokenSenha);
+        tokenSenhaRepository.save(tokenParaSalvar);
 
         try {
             emailService.enviarEmail(u.getEmail(), "Recuperação de senha",
@@ -60,70 +55,30 @@ public class RecuperarSenhaService {
         } catch (Exception e) {
             throw new RuntimeException("Falha ao enviar e-mail: " + e.getMessage(), e);
         }
-
-
-
     }
 
-
-
-    public boolean receberCodigo(CodigoDTO codigoDto){
-
+    public boolean receberCodigo(CodigoDTO codigoDto) {
         Optional<TokenSenha> token = tokenSenhaRepository.findByCodigo(codigoDto.getCodigo());
-
-        //Se não existe retorna falso
-        if(token.isEmpty()){
+        if (token.isEmpty()) {
             return false;
         }
-
-        //Extração do token senha do optional
         TokenSenha t = token.get();
-
-
-        //Verifica a expiração
-        if(t.getExpiracao().isBefore(LocalDateTime.now())){
+        if (t.getExpiracao().isBefore(LocalDateTime.now())) {
             return false;
         }
-
-        if(!t.getCodigo().equals(codigoDto.getCodigo())){
-            return false;
-        }
-
-        return true;
-
-
-
+        return t.getCodigo().equals(codigoDto.getCodigo());
     }
 
-    public void trocarSenha(SenhaNovaDTO senhaNovaDto){
+    public void trocarSenha(SenhaNovaDTO senhaNovaDto) {
+        TokenSenha t = tokenSenhaRepository.findByCodigo(senhaNovaDto.getCodigo())
+                .orElseThrow(() -> new RuntimeException("Código não encontrado ou inválido"));
 
-        Optional<TokenSenha> token = tokenSenhaRepository.findByCodigo(senhaNovaDto.getCodigo());
-
-        //Código não encontrado
-        if(token.isEmpty()){
-            throw new RuntimeException("Código não encontrado");
-        }
-
-        //Extraindo token no optional
-        TokenSenha t = token.get();
-
-        //Verificar a expiração de 15 minutos
-        if(t.getExpiracao().isBefore(LocalDateTime.now())){
+        if (t.getExpiracao().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Código com tempo expirado");
         }
-
-        //Pega o usuario
-        Usuario usuario = token.get().getUsuario();
-
-        //Atualizar a senha
+        Usuario usuario = t.getUsuario();
         usuario.setSenha(passwordEncoder.encode(senhaNovaDto.getNovaSenha()));
         usuarioRepository.save(usuario);
-
         tokenSenhaRepository.delete(t);
-
-
-
-
-
     }
 }

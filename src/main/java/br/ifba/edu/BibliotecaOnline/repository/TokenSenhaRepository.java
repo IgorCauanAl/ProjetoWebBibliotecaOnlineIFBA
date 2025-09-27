@@ -13,6 +13,8 @@ public interface TokenSenhaRepository extends JpaRepository<TokenSenha, Long> {
     Optional<TokenSenha> findByUsuarioAndCodigo (Usuario usuario, String codigo);
 
     Optional<TokenSenha> findByCodigo(String codigo);
+    
+    Optional<TokenSenha> findByUsuario(Usuario usuario);
 
     List<TokenSenha> codigo(String codigo);
 }
