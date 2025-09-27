@@ -172,7 +172,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Lógica para o formulário de Editar Detalhes
-
     const formEditar = document.getElementById("form-editar-detalhes");
     if (formEditar) {
         formEditar.addEventListener("submit", async (e) => {
@@ -204,6 +203,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify(dto)
             });
 
+            const popup = document.getElementById("editar-detalhes");
+            if (popup) popup.classList.remove("active");
+
             if (response.ok) {
                 await swalOK({
                     icon: "success",
@@ -211,17 +213,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     text: "Seus dados foram salvos com sucesso.",
                 });
 
-                const nomeField = document.querySelector(
-                    ".details .field:nth-child(1) div"
-                );
-                const emailField = document.querySelector(
-                    ".details .field:nth-child(2) div"
-                );
+
+
+                const nomeField = document.querySelector(".details .field:nth-child(1) div");
+                const emailField = document.querySelector(".details .field:nth-child(2) div");
+                const nomePrincipal = document.querySelector(".profile-meta h3");
+
+                //Atualizar os detalhes do perfil
+                if (nomePrincipal) nomePrincipal.textContent = nome;
                 if (nomeField) nomeField.textContent = nome;
                 if (emailField) emailField.textContent = email;
 
-                const popup = document.getElementById("editar-detalhes");
-                if (popup) popup.classList.remove("active");
 
                 formEditar.reset();
             } else {

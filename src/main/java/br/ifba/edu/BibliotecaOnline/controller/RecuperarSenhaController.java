@@ -4,6 +4,7 @@ package br.ifba.edu.BibliotecaOnline.controller;
 import br.ifba.edu.BibliotecaOnline.DTO.CodigoDTO;
 import br.ifba.edu.BibliotecaOnline.DTO.EmailRecuperacaoDTO;
 import br.ifba.edu.BibliotecaOnline.DTO.SenhaNovaDTO;
+import br.ifba.edu.BibliotecaOnline.excecao.EmailJaExisteException;
 import br.ifba.edu.BibliotecaOnline.service.RecuperarSenhaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,9 @@ public class RecuperarSenhaController {
         try{
             recuperarSenhaService.enviarCodigo(emailRecuperacaoDTO);
             return ResponseEntity.ok("Código enviado!");
-        }catch(RuntimeException e){
+        }catch(EmailJaExisteException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch(RuntimeException e){
             return ResponseEntity.badRequest().body("Código não foi enviado com sucesso!");
         }
 

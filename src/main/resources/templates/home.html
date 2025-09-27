@@ -44,7 +44,7 @@
                         <h2>Envie um livro para nós!</h2>
                         <p>Nossa equipe irá avaliar e logo iremos te responder via e-mail.</p>
 
-                        <form id="form-enviar-livro" th:action="@{/enviar-livro}" method="post" enctype="multipart/form-data">
+                        <form id="form-enviar-livro" th:action="@{/api/enviarLivro}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                             <div class="form-group">

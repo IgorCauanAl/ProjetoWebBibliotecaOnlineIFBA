@@ -5,6 +5,7 @@ import br.ifba.edu.BibliotecaOnline.DTO.EmailRecuperacaoDTO;
 import br.ifba.edu.BibliotecaOnline.DTO.SenhaNovaDTO;
 import br.ifba.edu.BibliotecaOnline.entities.TokenSenha;
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
+import br.ifba.edu.BibliotecaOnline.excecao.EmailJaExisteException;
 import br.ifba.edu.BibliotecaOnline.repository.TokenSenhaRepository;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
@@ -28,9 +29,11 @@ public class RecuperarSenhaService {
     public void enviarCodigo(EmailRecuperacaoDTO emailDTO) {
 
         Usuario u = usuarioRepository.findByEmail(emailDTO.getEmail())
-                .orElseThrow(() -> new RuntimeException("Email não encontrado"));
+                .orElseThrow(() -> new EmailJaExisteException("Email informado não está cadastrado!"));
 
+        //Gerar um código aleatorio
         String codigo = String.format("%06d", new Random().nextInt(1_000_000));
+
 
         Optional<TokenSenha> tokenExistenteOpt = tokenSenhaRepository.findByUsuario(u);
         
