@@ -161,18 +161,4 @@ public class LivroController {
     }
 
 
-    //EndPoint para detalhes do livro
-    @GetMapping("/detalhesLivro/{id}")
-    public String detalhesLivro (@PathVariable Long id, Model model){
-        LivroEntity livro = livroRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado!"));
-
-        model.addAttribute("livro",livro);
-
-        return "livros";
-
-           }
-
-
-
 }
