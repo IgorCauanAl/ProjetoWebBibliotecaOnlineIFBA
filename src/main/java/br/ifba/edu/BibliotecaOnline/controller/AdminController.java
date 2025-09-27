@@ -3,11 +3,9 @@ package br.ifba.edu.BibliotecaOnline.controller;
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.stream.Collectors;
-
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor

@@ -1,6 +1,6 @@
 package br.ifba.edu.BibliotecaOnline.service;
 
-import br.ifba.edu.BibliotecaOnline.DTO.LoginRequest;
+import br.ifba.edu.BibliotecaOnline.DTO.SolicitacaoLogin;
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.excecao.LoginIncorretoException;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
@@ -18,7 +18,7 @@ public class LoginService {
     private PasswordEncoder passwordEncoder; 
 
     
-    public Usuario authenticate (LoginRequest request){
+    public Usuario authenticate (SolicitacaoLogin request){
 
         // Busca o usuário pelo e-mail
         Usuario usuario = usuarioRepository.findByEmail(request.getEmail())

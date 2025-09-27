@@ -1,7 +1,6 @@
 package br.ifba.edu.BibliotecaOnline.service;
 
 import br.ifba.edu.BibliotecaOnline.DTO.CurtidosDTO;
-import br.ifba.edu.BibliotecaOnline.DTO.LivroDTO;
 import br.ifba.edu.BibliotecaOnline.entities.LivroEntity;
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.repository.LivroRepository;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 @Service
 @AllArgsConstructor

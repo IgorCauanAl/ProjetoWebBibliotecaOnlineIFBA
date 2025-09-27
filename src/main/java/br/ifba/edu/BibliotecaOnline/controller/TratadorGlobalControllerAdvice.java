@@ -16,8 +16,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.http.ResponseEntity;
-
-import br.ifba.edu.BibliotecaOnline.excecao.RecursoNaoEncontradoException;
 import br.ifba.edu.BibliotecaOnline.excecao.EmailJaExisteException;
 import br.ifba.edu.BibliotecaOnline.excecao.LivroDuplicadoException;
 import br.ifba.edu.BibliotecaOnline.excecao.AnoPublicacaoInvalidoException;

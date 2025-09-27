@@ -1,10 +1,8 @@
 package br.ifba.edu.BibliotecaOnline.controller;
 
 import br.ifba.edu.BibliotecaOnline.DTO.LivroDTO;
-import br.ifba.edu.BibliotecaOnline.entities.Autor;
 import br.ifba.edu.BibliotecaOnline.repository.AutorRepository;
 import br.ifba.edu.BibliotecaOnline.service.AutorService;
-import br.ifba.edu.BibliotecaOnline.entities.LivroEntity;
 import br.ifba.edu.BibliotecaOnline.repository.LivroRepository;
 import br.ifba.edu.BibliotecaOnline.service.LivroService;
 import jakarta.validation.Valid;

@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginRequest {
+public class SolicitacaoLogin {
     private String email;
     private String senha;
 

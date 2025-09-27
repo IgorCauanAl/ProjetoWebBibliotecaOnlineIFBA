@@ -1,11 +1,7 @@
 package br.ifba.edu.BibliotecaOnline.DTO;
-
-import br.ifba.edu.BibliotecaOnline.entities.Role;
-import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
