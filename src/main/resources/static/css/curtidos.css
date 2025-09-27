@@ -1,0 +1,140 @@
+.wrap-liked {
+  max-width: 1200px;
+  margin: 11rem auto 2rem;
+  padding: 0 20rem;
+}
+
+.wrap-liked section {
+  padding: 0;
+}
+
+.liked-head {
+  margin-bottom: 5rem;
+}
+.liked-title {
+  font-family: "Playfair Display", serif;
+  color: #2f3559;
+  font-size: 3.2rem;
+  margin: 0 0 0.6rem;
+}
+.liked-sub {
+  color: #6b6b75;
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+/* grade de livros */
+.liked-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2.4rem 2.2rem;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.book-cover {
+  position: relative;
+  width: 150px;
+  aspect-ratio: 2/3;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+.book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.heart-btn {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: #eef1f7;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.heart-btn i {
+  color: #9a5071;
+  font-size: 1.6rem;
+}
+.heart-btn.active i {
+  color: #d97298;
+}
+
+.stars {
+  margin-top: 0.8rem;
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+.star {
+  font-size: 1.4rem;
+  color: #c9c9c9;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.star.filled {
+  color: #f6c33d;
+}
+.star:hover {
+  transform: scale(1.08);
+}
+
+.book-title {
+  margin-top: 1.2rem;
+  color: #2f3559;
+  font-family: "Playfair Display", serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+.book-author {
+  margin-top: 0.4rem;
+  color: #2f3559;
+  font-size: 1.2rem;
+}
+.book-card.removing {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.heart-btn.animating i {
+  transform: scale(1.4);
+  transition: transform 0.3s ease;
+}
+
+/*responsividade*/
+@media (max-width: 1100px) {
+  .liked-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 820px) {
+  .liked-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .liked-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 420px) {
+  .wrap-liked {
+    margin-top: 12rem;
+  }
+  .liked-grid {
+    grid-template-columns: 1fr;
+  }
+}

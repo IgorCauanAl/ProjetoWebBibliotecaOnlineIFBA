@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Início | Biblioteca Online</title>
-    
-    
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/png" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
@@ -43,7 +43,7 @@
                         <button id="close-popup-btn" class="close-btn" title="Fechar">&times;</button>
                         <h2>Envie um livro para nós!</h2>
                         <p>Nossa equipe irá avaliar e logo iremos te responder via e-mail.</p>
-                        
+
                         <form id="form-enviar-livro" th:action="@{/enviar-livro}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
@@ -113,12 +113,7 @@
             <div class="list">
                 <div class="item" th:each="livro : ${resultadosPesquisa.content}">
                     <div class="card">
-                        <div class="card-image-container">
-                            <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
-                            <button class="like-btn" aria-label="Curtir">
-                                <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                            </button>
-                        </div>
+                        <div class="card-image-container"><img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" /></div>
                         <div class="card-content">
                             <p class="card-title" th:text="${livro.nome}"></p>
                             <a th:href="@{/autor/{id}(id=${livro.autorId})}" class="card-author-link"><p class="card-author" th:text="${livro.autorNome}"></p></a>
@@ -152,12 +147,7 @@
             <div class="list">
                 <div class="item" th:each="livro : ${resultadosGenero.content}">
                     <div class="card">
-                        <div class="card-image-container">
-                            <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
-                             <button class="like-btn" aria-label="Curtir">
-                                <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                            </button>
-                        </div>
+                        <div class="card-image-container"><img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" /></div>
                         <div class="card-content">
                             <p class="card-title" th:text="${livro.nome}"></p>
                             <a th:href="@{/autor/{id}(id=${livro.autorId})}" class="card-author-link"><p class="card-author" th:text="${livro.autorNome}"></p></a>
@@ -195,12 +185,7 @@
             <div class="list">
                 <div class="item" th:each="livro : ${resultadosAutor.content}">
                     <div class="card">
-                         <div class="card-image-container">
-                            <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
-                            <button class="like-btn" aria-label="Curtir">
-                                <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                            </button>
-                        </div>
+                         <div class="card-image-container"><img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" /></div>
                          <div class="card-content">
                             <p class="card-title" th:text="${livro.nome}"></p>
                             <a th:href="@{/autor/{id}(id=${livro.autorId})}" class="card-author-link"><p class="card-author" th:text="${livro.autorNome}"></p></a>
@@ -294,7 +279,7 @@
                         <div class="card">
                             <div class="card-image-container">
                                 <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
-                                <button class="like-btn" aria-label="Curtir">
+                                <button th:attr="data-livro-id=${livro.id}" class="like-btn" aria-label="Curtir">
                                     <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
                                 </button>
                             </div>
@@ -324,7 +309,7 @@
                         <div class="card">
                             <div class="card-image-container">
                                 <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
-                                <button class="like-btn" aria-label="Curtir">
+                                <button th:attr="data-livro-id=${livro.id}" class="like-btn" aria-label="Curtir">
                                     <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
                                 </button>
                             </div>
@@ -351,6 +336,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script th:src="@{/js/home-search.js}" defer></script>
     <script th:src="@{/js/script.js}" defer></script>
+    <script type="module" th:src="@{/js/curtidos.js}"></script>
 
 </body>
 </html>

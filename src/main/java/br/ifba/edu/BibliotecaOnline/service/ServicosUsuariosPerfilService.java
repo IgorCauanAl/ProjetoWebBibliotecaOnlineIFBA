@@ -89,6 +89,7 @@ public class ServicosUsuariosPerfilService {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
+
         usuarioRepository.delete(usuario);
         SecurityContextHolder.clearContext();
 

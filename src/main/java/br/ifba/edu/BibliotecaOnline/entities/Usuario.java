@@ -1,5 +1,6 @@
 package br.ifba.edu.BibliotecaOnline.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -46,10 +47,6 @@ public class Usuario {
     private String fotoPerfil;
 
 
-    // Lista de favoritos do usuário
-    @NotAudited
-    @OneToMany(mappedBy = "usuarioFavoritos")
-    private List<Favoritos> favoritos = new ArrayList<>();
 
     @ManyToMany
     @NotAudited
@@ -62,7 +59,7 @@ public class Usuario {
     private List<LivroEntity> livrosCurtidos = new ArrayList<>();
 
     //Lista de Livros Publicados
-    @OneToMany(mappedBy = "publicadoPor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE },mappedBy = "publicadoPor")
     private List<LivroEntity> livrosPublicados = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
