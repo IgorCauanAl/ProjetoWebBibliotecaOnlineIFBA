@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,44 +14,43 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
-      <meta name="_csrf" th:content="${_csrf.token}" />
-      <meta name="_csrf_header" th:content="${_csrf.headerName}" />
-      <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/curtidos.css}" />
+    <link rel="stylesheet" th:href="@{/css/home-search.css}" />
+
+    <style>
+      html {
+        height: 100%;
+      }
+      
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .wrap-liked {
+        flex-grow: 1;
+      }
+    </style>
   </head>
   <body>
-    <header class="header">
-      <a href="perfil.html" class="logo" id="header-avatar">
-        <i
-          class="bx bx-user-circle"
-          style="font-size: 50px; color: #2f3559"
-        ></i>
-      </a>
-      <nav class="navbar">
-          <a th:href="@{/home}"><i class="bx bx-home"></i></a>
-          <a th:href="@{/curtidos}"><i class="bx bx-heart"></i></a>
+    <div th:replace="~{fragments/novo-header :: header}"></div>
 
-      </nav>
-
-      <div class="search-container">
-        <input
-          type="text"
-          placeholder="Busque por livros.."
-          class="search-input"
-        />
-        <button class="search-btn" aria-label="Buscar">
-          <i class="bx bx-search"></i>
-        </button>
-      </div>
-    </header>
-    <section class="wrap-liked">
+    <main class="wrap-liked">
         <section class="liked-head">
             <h1 class="liked-title">Livros curtidos</h1>
             <p class="liked-sub">Veja os livros curtidos por você</p>
         </section>
 
-        <section id="liked-grid" class="liked-grid">
-            <div th:each="livro : ${usuario.livrosCurtidos}" class="book-card" th:data-book="${livro.id}">
+        <div th:if="${paginaDeLivrosCurtidos.empty}" style="text-align: center; padding: 40px; color: #555;">
+            <p>Você ainda não curtiu nenhum livro.</p>
+        </div>
+
+        <section id="liked-grid" class="liked-grid" th:unless="${paginaDeLivrosCurtidos.empty}">
+            <div th:each="livro : ${paginaDeLivrosCurtidos.content}" class="book-card" th:data-book="${livro.id}">
                 <div class="book-cover">
                     <img th:src="${livro.capaUrl} ?: '/img/capas/placeholder.jpg'"
                          th:alt="'Capa do livro ' + ${livro.nome}" />
@@ -60,42 +59,23 @@
                     </button>
                 </div>
                 <h3 class="book-title" th:text="${livro.nome}"></h3>
-                <p class="book-author" th:text="${livro.autor.nomeAutor}"></p>
+                <p class="book-author" th:text="${livro.autorNome}"></p>
             </div>
         </section>
 
+        <nav class="pagination-container" aria-label="Navegação de páginas" th:if="${paginaDeLivrosCurtidos.totalPages > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, paginaDeLivrosCurtidos.totalPages - 1)}" th:classappend="${i == paginaDeLivrosCurtidos.number} ? 'active'">
+                    <a class="page-link" th:href="@{/curtidos(page=${i}, size=${paginaDeLivrosCurtidos.size})}" th:text="${i + 1}"></a>
+                </li>
+            </ul>
+        </nav>
+    </main>
 
-        <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-about">
-          <h2>Sobre</h2>
-          <p>
-            Biblioteca online é uma plataforma digital que oferece acesso
-            gratuito a uma vasta coleção de livros em diversos gêneros e
-            formatos. Nosso objetivo é promover a leitura e o compartilhamento
-            de conhecimento.
-          </p>
-          <img
-            th:src="@{/img/logohome.png}"
-            alt="Logo Biblioteca"
-            class="footer-logo"
-          />
-        </div>
-        <div class="footer-contacts">
-          <h2>Contatos</h2>
-          <ul>
-            <li><i class="fas fa-envelope"></i> elivrosonline@gmail.com</li>
-          </ul>
-        </div>
-      </div>
-      <div class="copyright-container">
-        <p class="copyright">
-          Copyright © 2024 Todos os direitos Reservados - Biblioteca Online
-        </p>
-      </div>
-    </footer>
+    <div th:replace="~{fragments/novo-footer :: footer}"></div>
 
     <script th:src="@{/js/script.js}"></script>
     <script th:src="@{/js/curtidos.js}" type="module"></script>
-  </body>
+    <script th:src="@{/js/home-search.js}" type="module"></script>
+</body>
 </html>

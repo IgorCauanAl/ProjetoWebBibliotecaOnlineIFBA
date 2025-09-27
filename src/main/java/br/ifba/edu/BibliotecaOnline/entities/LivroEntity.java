@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.envers.Audited;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import br.ifba.edu.BibliotecaOnline.model.GeneroEnum;
 
@@ -47,5 +48,8 @@ public class LivroEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "autor_id", nullable = true) // Novo campo de relacionamento
     private Autor autor;
+
+    @ManyToMany(mappedBy = "livrosCurtidos")
+    private List<Usuario> usuariosQueCurtiram = new ArrayList<>();
 
 }

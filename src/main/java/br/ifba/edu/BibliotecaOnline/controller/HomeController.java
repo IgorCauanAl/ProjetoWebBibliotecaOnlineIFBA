@@ -1,29 +1,36 @@
 package br.ifba.edu.BibliotecaOnline.controller;
 
+import br.ifba.edu.BibliotecaOnline.DTO.CurtidosDTO;
 import br.ifba.edu.BibliotecaOnline.DTO.LivroDTO;
 import br.ifba.edu.BibliotecaOnline.entities.Autor;
 import br.ifba.edu.BibliotecaOnline.model.GeneroEnum;
 import br.ifba.edu.BibliotecaOnline.service.AutorService;
+import br.ifba.edu.BibliotecaOnline.service.CurtidosService;
 import br.ifba.edu.BibliotecaOnline.service.LivroService;
 import br.ifba.edu.BibliotecaOnline.service.FileStorageService;
-import br.ifba.edu.BibliotecaOnline.excecao.FileDownloadException;
-
+import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional; 
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,6 +39,8 @@ public class HomeController {
     private final LivroService livroService;
     private final AutorService autorService;
     private final FileStorageService fileStorageService;
+    private final CurtidosService curtidosService;
+    private final UsuarioRepository usuarioRepository;
 
     @GetMapping({"/", "/home"})
     public String exibirHome(
@@ -46,7 +55,6 @@ public class HomeController {
             Optional<Autor> autorEncontrado = autorService.buscarPorNomeIgnoreCase(query.trim());
             
             if (autorEncontrado.isPresent()) {
-
                 return "redirect:/autor/" + autorEncontrado.get().getId();
             }
 
@@ -145,5 +153,30 @@ public class HomeController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/curtidos")
+    public String viewCurtidosPage(Model model, Authentication authentication,
+                                     @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+        if (authentication == null) {
+            return "redirect:/login";
+        }
+        Page<CurtidosDTO> paginaDeLivrosCurtidos = curtidosService.listarCurtidos(authentication, pageable);
+        model.addAttribute("paginaDeLivrosCurtidos", paginaDeLivrosCurtidos);
+        return "curtidos"; 
+    }
+
+    private Set<Long> getLivrosCurtidosIds() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            return Collections.emptySet();
+        }
+
+        String email = authentication.getName();
+        return usuarioRepository.findByEmail(email)
+                .map(usuario -> usuario.getLivrosCurtidos().stream()
+                        .map(livro -> livro.getId())
+                        .collect(Collectors.toSet()))
+                .orElse(Collections.emptySet());
     }
 }

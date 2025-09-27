@@ -19,6 +19,7 @@ public class LivroDTO {
     private Integer anoPublicacao;
 
     private String capaUrl;
+    
     private String pdfUrl;
 
     @Size(max = 2000)
@@ -36,6 +37,10 @@ public class LivroDTO {
 
     // Usado quando se cadastra um novo autor junto com o livro
     private String novoAutorNome;
+
     private String novoAutorDescricao;
+
     private String novoAutorFotoUrl;
+
+    private boolean curtidoPeloUsuario; 
 }

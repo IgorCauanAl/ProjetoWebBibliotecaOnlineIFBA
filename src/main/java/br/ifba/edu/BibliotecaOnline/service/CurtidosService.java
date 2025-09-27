@@ -9,6 +9,8 @@ import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -27,18 +29,18 @@ public class CurtidosService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
-    public List<CurtidosDTO> listarCurtidos(Authentication authentication) {
-        return getUsuarioLogado(authentication).getLivrosCurtidos()
-                .stream()
-                .map(livro -> {
-                    CurtidosDTO dto = new CurtidosDTO();
-                    dto.setId(livro.getId());
-                    dto.setNome(livro.getNome());
-                    dto.setCapaUrl(livro.getCapaUrl());
-                    dto.setAutorNome(livro.getAutor() != null ? livro.getAutor().getNomeAutor() : "Desconhecido");
-                    return dto;
-                })
-                .toList();
+     public Page<CurtidosDTO> listarCurtidos(Authentication authentication, Pageable pageable) {
+        Usuario usuario = getUsuarioLogado(authentication);
+        Page<LivroEntity> paginaLivros = livroRepository.findByUsuariosQueCurtiram_Id(usuario.getId(), pageable);
+
+        return paginaLivros.map(livro -> {
+            CurtidosDTO dto = new CurtidosDTO();
+            dto.setId(livro.getId());
+            dto.setNome(livro.getNome());
+            dto.setCapaUrl(livro.getCapaUrl());
+            dto.setAutorNome(livro.getAutor() != null ? livro.getAutor().getNomeAutor() : "Desconhecido");
+            return dto;
+        });
     }
 
 

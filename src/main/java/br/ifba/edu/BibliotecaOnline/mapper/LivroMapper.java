@@ -9,7 +9,8 @@ import org.mapstruct.Mapping;
 public interface LivroMapper {
 
     @Mapping(target = "publicadoPor", ignore = true)
-    @Mapping(target = "autor", ignore = true) // Ignorar o autor, pois será tratado no serviço
+    @Mapping(target = "autor", ignore = true)
+    @Mapping(target = "usuariosQueCurtiram", ignore = true)
     LivroEntity toEntity(LivroDTO dto);
 
     @Mapping(source = "publicadoPor.nome", target = "publicadoPorNome")
@@ -18,5 +19,6 @@ public interface LivroMapper {
     @Mapping(target = "novoAutorNome", ignore = true)
     @Mapping(target = "novoAutorDescricao", ignore = true)
     @Mapping(target = "novoAutorFotoUrl", ignore = true)
+    @Mapping(target = "curtidoPeloUsuario", ignore = true) 
     LivroDTO toDTO(LivroEntity entity);
 }

@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LivroRepository extends JpaRepository<LivroEntity, Long> {
 
-    // Método de busca ajustado para pesquisar pelo nome do livro OU pelo nome do autor na entidade relacionada
     Page<LivroEntity> findByNomeContainingIgnoreCaseOrAutorNomeAutorContainingIgnoreCase(String nome, String autorNome, Pageable pageable);
 
     boolean existsByNome(String nome);
@@ -25,4 +24,6 @@ public interface LivroRepository extends JpaRepository<LivroEntity, Long> {
     Page<LivroEntity> findByAutorId(Long autorId, Pageable pageable);
 
     boolean existsByNomeAndIdNot(String nome, Long id);
+
+    Page<LivroEntity> findByUsuariosQueCurtiram_Id(Long usuarioId, Pageable pageable);
 }

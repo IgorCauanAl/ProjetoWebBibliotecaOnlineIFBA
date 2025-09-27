@@ -1,89 +1,66 @@
-const csrfToken = document.querySelector('meta[name="_csrf"]').content;
-const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
-/**
- * Função para adicionar o listener de curtir/descurtir a um botão
- */
-function attachLikeListener(button, livroId) {
-    button.addEventListener("click", async () => {
-        const isLiked = button.classList.contains("active");
-        const method = isLiked ? "DELETE" : "POST";
+document.addEventListener("DOMContentLoaded", () => {
 
-        try {
-            const response = await fetch(`/api/liked-books/${livroId}`, {
-                method: method,
-                headers: { [csrfHeader]: csrfToken }
-            });
-            if (!response.ok) throw new Error("Erro ao atualizar curtidos");
+    // Pega os tokens CSRF das meta tags no HTML para segurança nas requisições.
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-            // Atualiza o visual do botão
-            button.classList.toggle("active");
+    /**
+     * Adiciona um "ouvinte" de clique a um botão de curtir.
+     * @param {HTMLElement} button - O elemento do botão.
+     */
+    function attachLikeListener(button) {
+        const livroId = button.dataset.livroId;
+        if (!livroId) return; 
 
-            // Se for página de curtidos e estiver descurtindo, remove o card
-            if (method === "DELETE") {
-                const card = button.closest(".book-card");
-                if (card) card.remove();
+        button.addEventListener("click", async () => {
+            const isLiked = button.classList.contains("active");
+            
+            const method = isLiked ? "DELETE" : "POST";
+
+            try {
+                
+                const response = await fetch(`/api/liked-books/${livroId}`, {
+                    method: method,
+                    headers: {
+                        [csrfHeader]: csrfToken
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("A resposta da API não foi bem-sucedida.");
+                }
+
+                
+                button.classList.toggle("active");
+
+            
+                const isOnCurtidosPage = document.body.contains(document.getElementById('liked-grid'));
+                
+                if (method === "DELETE" && isOnCurtidosPage) {
+                    const card = button.closest(".book-card");
+                    if (card) {
+                        // Adiciona uma animação de fade-out antes de remover
+                        card.style.transition = 'opacity 0.3s ease-out';
+                        card.style.opacity = '0';
+                        setTimeout(() => card.remove(), 300);
+                    }
+                }
+
+            } catch (error) {
+                console.error("Erro ao curtir/descurtir livro:", error);
+                // Opcional: mostrar uma mensagem de erro para o usuário.
             }
-
-        } catch (error) {
-            console.error("Erro ao curtir/descurtir livro:", error);
-        }
-    });
-}
-
-
-/**
- * Inicializa os botões já existentes na página (home, categorias, etc.)
- */
-function initExistingButtons() {
-    document.querySelectorAll(".like-btn, .heart-btn").forEach(btn => {
-        const livroId = btn.dataset.livroId;
-        if (livroId) attachLikeListener(btn, livroId);
-    });
-}
-
-/**
- * Carrega os livros curtidos no grid da página de curtidos
- */
-async function carregarCurtidos() {
-    try {
-        const response = await fetch("/api/liked-books");
-        if (!response.ok) throw new Error("Erro ao buscar livros curtidos");
-        const livros = await response.json();
-
-        const container = document.getElementById("liked-grid");
-        if (!container) return;
-
-        container.innerHTML = ""; // limpa antes de preencher
-
-        livros.forEach(livro => {
-            const card = document.createElement("div");
-            card.classList.add("book-card");
-            card.dataset.book = livro.id;
-            card.innerHTML = `
-                <div class="book-cover">
-                    <img src="${livro.capaUrl || '/img/capas/placeholder.jpg'}" alt="Capa do livro ${livro.nome}" />
-                    <button class="heart-btn active" data-livro-id="${livro.id}" title="Curtido">
-                        <i class="bx bxs-heart"></i>
-                    </button>
-                </div>
-                <h3 class="book-title">${livro.nome}</h3>
-                <p class="book-author">${livro.autorNome}</p>
-            `;
-            container.appendChild(card);
-
-            // adiciona listener ao botão criado dinamicamente
-            const heartBtn = card.querySelector(".heart-btn");
-            attachLikeListener(heartBtn, livro.id);
         });
-
-    } catch (error) {
-        console.error("Erro ao carregar livros curtidos:", error);
     }
-}
 
-// Inicialização quando o DOM estiver pronto
-window.addEventListener("DOMContentLoaded", () => {
+   
+    function initExistingButtons() {
+        document.querySelectorAll(".like-btn, .heart-btn").forEach(button => {
+            attachLikeListener(button);
+        });
+    }
+
+    
     initExistingButtons();
-    carregarCurtidos();
 });

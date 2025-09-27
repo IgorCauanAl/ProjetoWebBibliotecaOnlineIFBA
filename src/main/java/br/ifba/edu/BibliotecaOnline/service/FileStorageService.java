@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -48,10 +47,8 @@ public class FileStorageService {
                 throw new FileNotFoundException("Arquivo PDF não encontrado no caminho: " + arquivo.toString());
             }
 
-        } catch (MalformedURLException | FileNotFoundException e) {
-            throw new FileDownloadException("Erro ao localizar ou ler o arquivo do livro: " + e.getMessage());
         } catch (IOException e) {
-             throw new FileDownloadException("Erro de I/O ao processar o arquivo: " + e.getMessage());
+            throw new FileDownloadException("Erro ao localizar ou ler o arquivo do livro: " + e.getMessage());
         }
     }
 }
