@@ -1,4 +1,4 @@
- //Seleciona os elementos do DOM
+//Seleciona os elementos do DOM
 const loginForm = document.querySelector(".login-wrap");
 const signupForm = document.querySelector(".signup-wrap");
 const title = document.querySelector("title");
@@ -20,10 +20,10 @@ loginToggleBtn.onclick = () => {
     title.textContent = "Entrar";
 };
 
+// Event listener para o formulário de cadastro com os alertas modificados
 signupFormElement.addEventListener("submit", async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
-    // Pega os valores dos campos de input
     const nome = document.querySelector("#nome-cadastro").value;
     const email = document.querySelector("#email-cadastro").value;
     const senha = document.querySelector("#password-cadastro").value;
@@ -35,21 +35,47 @@ signupFormElement.addEventListener("submit", async (e) => {
             body: JSON.stringify({ nome, email, senha }),
         });
 
-        if (response.status === 409) {
-            alert("Este e-mail já está cadastrado!");
-            return;
+        if (!response.ok) {
+            let errorMessage = "Ocorreu um erro desconhecido. Tente novamente.";
+            const contentType = response.headers.get("content-type");
+
+            if (contentType && contentType.includes("application/json")) {
+                const errorData = await response.json();
+                errorMessage = errorData.message || JSON.stringify(errorData);
+            } else {
+                errorMessage = await response.text();
+            }
+            throw new Error(errorMessage);
         }
 
-        if (!response.ok) {
-            throw new Error("Ocorreu um erro no cadastro. Tente novamente.");
-        }
-        
-        // Se o cadastro foi bem-sucedido
-        alert("Cadastro realizado com sucesso! Faça o login para continuar.");
-        
-        loginToggleBtn.click();
-        
+        const data = await response.json();
+
+        // Alerta de sucesso COM a classe personalizada
+        Swal.fire({
+            title: "Cadastro realizado!",
+            text: "Você já pode fazer o login com suas credenciais.",
+            icon: "success",
+            confirmButtonText: "login",
+            customClass: {
+                confirmButton: 'meu-botao-confirmar'
+            },
+            buttonsStyling: false
+            // ------------------------
+        }).then(() => {
+            signupFormElement.reset();
+            loginToggleBtn.click();
+        });
+
     } catch (err) {
-        alert(err.message);
+        Swal.fire({
+            title: "Erro no Cadastro",
+            text: err.message,
+            icon: "error",
+            confirmButtonText: "Entendi", 
+            customClass: {
+                confirmButton: 'meu-botao-confirmar'
+            },
+            buttonsStyling: false
+        });
     }
 });

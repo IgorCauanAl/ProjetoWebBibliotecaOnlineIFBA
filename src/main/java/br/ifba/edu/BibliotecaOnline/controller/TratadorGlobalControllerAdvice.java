@@ -65,9 +65,9 @@ public class TratadorGlobalControllerAdvice {
     }
 
     // Captura erros de validação de entrada.
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView handleValidationExceptions(MethodArgumentNotValidException ex) {
+   @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        // Coleta todos os erros de validação
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
@@ -75,19 +75,20 @@ public class TratadorGlobalControllerAdvice {
             errors.put(fieldName, errorMessage);
         });
 
-        String errorMessage = errors.entrySet().stream()
-                .map(entry -> String.format("%s: %s", entry.getKey(), entry.getValue()))
-                .collect(Collectors.joining(", "));
+        // Monta o corpo da resposta de erro em um formato JSON amigável
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("errors", errors);
 
-        logger.warn("Erro de validação: {}", errorMessage);
+        // Pega a primeira mensagem de erro para ser a mensagem principal
+        String defaultMessage = errors.values().stream().findFirst().orElse(ex.getMessage());
+        body.put("message", defaultMessage);
 
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("status", HttpStatus.BAD_REQUEST.value());
-        modelAndView.addObject("error", "Dados inválidos");
-        modelAndView.addObject("message", errorMessage);
-        modelAndView.addObject("errors", errors);
-        modelAndView.addObject("timestamp", LocalDateTime.now());
-        return modelAndView;
+        logger.warn("Erro de validação: {}", defaultMessage);
+
+        // Retorna uma ResponseEntity com status 400 (Bad Request) e o corpo em JSON
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     // Captura erros de tipo inválido nos parâmetros da requisição.

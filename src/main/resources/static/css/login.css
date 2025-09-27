@@ -160,9 +160,7 @@ button {
 }
 
 button:hover {
-  width: 50%;
   letter-spacing: 2px;
-  background: transparent;
   border: 2px solid #fff;
 }
 
@@ -215,4 +213,18 @@ button:hover {
     font-size: 0.9rem;
   }
 }
+
+.meu-botao-confirmar {
+  background-color: #4A55A2; 
+  color: white;            
+  border: none;
+  border-radius: 8px;      
+  padding: 12px 24px;      
+  font-size: 16px;         
+  font-weight: 600;        
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 
