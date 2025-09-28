@@ -55,8 +55,13 @@ public class Usuario {
     private List<LivroEntity> livrosCurtidos = new ArrayList<>();
 
     //Lista de Livros Publicados
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE },mappedBy = "publicadoPor")
+    @OneToMany(cascade =  CascadeType.ALL, orphanRemoval = true  ,mappedBy = "publicadoPor")
     private List<LivroEntity> livrosPublicados = new ArrayList<>();
+
+    @NotAudited
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AvaliacaoEntity> avaliacoes = new ArrayList<>();
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -70,5 +75,7 @@ public class Usuario {
     //Token do usuario para recuperação da senha
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private TokenSenha tokenSenha;
+
+
 
 }

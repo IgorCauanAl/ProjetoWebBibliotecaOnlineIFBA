@@ -3,6 +3,9 @@ package br.ifba.edu.BibliotecaOnline.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,6 +28,7 @@ public class AvaliacaoEntity {
     private LocalDateTime dataAvaliacao;
 
     // Relacionamento: Muitas avaliações para UM livro
+    @NotAudited
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "livro_id", nullable = false)
     private LivroEntity livro;
