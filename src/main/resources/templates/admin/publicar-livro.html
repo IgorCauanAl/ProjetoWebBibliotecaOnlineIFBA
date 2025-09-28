@@ -75,8 +75,7 @@
                         <span>Adicionar uma capa</span>
                     </div>
                 </label>
-                <input type="file" id="capa-livro-input" name="capaFile" accept=".png, .jpg, .jpeg" class="visually-hidden" 
-                       th:required="${livroDTO.id == null}" />
+                <input type="file" id="capa-livro-input" name="capaFile" accept=".png, .jpg, .jpeg" class="visually-hidden"  />
             </div>
 
             <div class="form-fields" style="margin-top: 0;">
@@ -85,6 +84,7 @@
                     <div class="form-group">
                         <label for="titulo">Título</label>
                         <input type="text" id="titulo" placeholder="Insira um título legal" th:field="*{nome}" required />
+                        <span class="error-message" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></span>
                     </div>
                     <div class="form-group">
                         <label for="sinopse">Sinopse</label>
@@ -155,8 +155,7 @@
                             <small>(Selecione um novo arquivo abaixo para substituir)</small>
                         </div>
                         
-                        <input type="file" id="pdf-file-input" name="pdfFile" accept=".pdf" 
-                               th:required="${livroDTO.id == null}"/>
+                        <input type="file" id="pdf-file-input" name="pdfFile" accept=".pdf" />
                         <div th:if="${#fields.hasErrors('pdfUrl')}" class="alert alert-danger" th:errors="*{pdfUrl}"></div>
                     </div>
                 </div>

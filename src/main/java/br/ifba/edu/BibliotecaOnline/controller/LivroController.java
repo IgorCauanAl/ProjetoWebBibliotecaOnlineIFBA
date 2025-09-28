@@ -3,6 +3,7 @@ package br.ifba.edu.BibliotecaOnline.controller;
 import br.ifba.edu.BibliotecaOnline.DTO.LivroDTO;
 import br.ifba.edu.BibliotecaOnline.excecao.AnoPublicacaoInvalidoException;
 import br.ifba.edu.BibliotecaOnline.excecao.AutorExistenteException;
+import br.ifba.edu.BibliotecaOnline.excecao.LivroDuplicadoException;
 import br.ifba.edu.BibliotecaOnline.service.AutorService;
 import br.ifba.edu.BibliotecaOnline.service.LivroService;
 import jakarta.validation.Valid;
@@ -71,81 +72,94 @@ public class LivroController {
     }
 
    @PostMapping("/salvar")
-    public String salvarLivro(
-            @Valid @ModelAttribute("livroDTO") LivroDTO livroDTO,
-            BindingResult result,
-            @RequestParam("capaFile") MultipartFile capaFile,
-            @RequestParam("pdfFile") MultipartFile pdfFile,
-            @RequestParam(name = "novoAutorFoto", required = false) MultipartFile novoAutorFoto,
-            Model model) {
+public String salvarLivro(
+        @Valid @ModelAttribute("livroDTO") LivroDTO livroDTO,
+        BindingResult result,
+        @RequestParam("capaFile") MultipartFile capaFile,
+        @RequestParam("pdfFile") MultipartFile pdfFile,
+        @RequestParam(name = "novoAutorFoto", required = false) MultipartFile novoAutorFoto,
+        Model model) {
 
-       
-        boolean isNovoAutor = "novo".equals(livroDTO.getTipoAutor());
+    boolean isNovoAutor = "novo".equals(livroDTO.getTipoAutor());
 
-        if (isNovoAutor) {
-            if (livroDTO.getNovoAutorNome() == null || livroDTO.getNovoAutorNome().isBlank()) {
-                result.rejectValue("novoAutorNome", "error.novoAutorNome", "O nome do novo autor é obrigatório.");
-            }
-            if (livroDTO.getNovoAutorDescricao() == null || livroDTO.getNovoAutorDescricao().isBlank()) {
-                result.rejectValue("novoAutorDescricao", "error.novoAutorDescricao", "A descrição do novo autor é obrigatória.");
-            }
-        } else { 
-            if (livroDTO.getAutorId() == null) {
-                result.rejectValue("autorId", "error.autorId", "Selecione um autor existente.");
-            }
+    if (isNovoAutor) {
+        if (livroDTO.getNovoAutorNome() == null || livroDTO.getNovoAutorNome().isBlank()) {
+            result.rejectValue("novoAutorNome", "error.novoAutorNome", "O nome do novo autor é obrigatório.");
         }
-        
-        boolean isEdicao = livroDTO.getId() != null;
-        if (!isEdicao) { 
-            if (capaFile.isEmpty()) {
-                result.rejectValue("capaUrl", "error.capaUrl", "A imagem da capa é obrigatória.");
-            }
-            if (pdfFile.isEmpty()) {
-                result.rejectValue("pdfUrl", "error.pdfUrl", "O arquivo PDF do livro é obrigatório.");
-            }
+        if (livroDTO.getNovoAutorDescricao() == null || livroDTO.getNovoAutorDescricao().isBlank()) {
+            result.rejectValue("novoAutorDescricao", "error.novoAutorDescricao", "A descrição do novo autor é obrigatória.");
         }
-        
-        if (result.hasErrors()) {
-            carregarAutoresNoModelo(model);
-            if (isEdicao) { 
-                LivroDTO original = livroService.buscarPorId(livroDTO.getId());
-                livroDTO.setCapaUrl(original.getCapaUrl());
-                livroDTO.setPdfUrl(original.getPdfUrl());
-            }
-            return "admin/publicar-livro";
-        }
-
-        try {
-            if (capaFile != null && !capaFile.isEmpty()) {
-                livroDTO.setCapaUrl(salvarArquivo(capaFile, "uploads/imgs"));
-            }
-            if (pdfFile != null && !pdfFile.isEmpty()) {
-                livroDTO.setPdfUrl(salvarArquivo(pdfFile, "uploads/pdfs"));
-            }
-            if (novoAutorFoto != null && !novoAutorFoto.isEmpty()) {
-                livroDTO.setNovoAutorFotoUrl(salvarArquivo(novoAutorFoto, "uploads/autores"));
-            }
-
-            livroService.salvar(livroDTO);
-            return "redirect:/admin/livros";
-
-        } catch (AnoPublicacaoInvalidoException e) {
-            result.rejectValue("anoPublicacao", "error.anoPublicacao", e.getMessage());
-            carregarAutoresNoModelo(model);
-            return "admin/publicar-livro";
-
-        } catch (AutorExistenteException e) {
-            
-            result.rejectValue("novoAutorNome", "error.novoAutorNome", e.getMessage());
-            carregarAutoresNoModelo(model);
-            return "admin/publicar-livro";
-        } catch (Exception e) {
-            
-            model.addAttribute("erroGeral", "Ocorreu um erro inesperado: " + e.getMessage());
-            carregarAutoresNoModelo(model);
-            return "admin/publicar-livro";
+    } else {
+        if (livroDTO.getAutorId() == null) {
+            result.rejectValue("autorId", "error.autorId", "Selecione um autor existente.");
         }
     }
+
+    boolean isEdicao = livroDTO.getId() != null;
+    if (!isEdicao && capaFile.isEmpty() && (livroDTO.getCapaUrl() == null || livroDTO.getCapaUrl().isBlank())) {
+        result.rejectValue("capaUrl", "error.capaUrl", "A imagem da capa é obrigatória.");
+    }
+
+    if (!isEdicao && pdfFile.isEmpty() && (livroDTO.getPdfUrl() == null || livroDTO.getPdfUrl().isBlank())) {
+        result.rejectValue("pdfUrl", "error.pdfUrl", "O arquivo PDF do livro é obrigatório.");
+    }
+
+    if (result.hasErrors()) {
+        carregarAutoresNoModelo(model);
+        if (isEdicao) {
+            LivroDTO original = livroService.buscarPorId(livroDTO.getId());
+            if (livroDTO.getCapaUrl() == null || livroDTO.getCapaUrl().isBlank()) {
+                livroDTO.setCapaUrl(original.getCapaUrl());
+            }
+            if (livroDTO.getPdfUrl() == null || livroDTO.getPdfUrl().isBlank()) {
+                livroDTO.setPdfUrl(original.getPdfUrl());
+            }
+        }
+        return "admin/publicar-livro";
+    }
+
+
+    try {
+        if (capaFile != null && !capaFile.isEmpty()) {
+            livroDTO.setCapaUrl(salvarArquivo(capaFile, "uploads/imgs"));
+        }
+        if (pdfFile != null && !pdfFile.isEmpty()) {
+            livroDTO.setPdfUrl(salvarArquivo(pdfFile, "uploads/pdfs"));
+        }
+        if (novoAutorFoto != null && !novoAutorFoto.isEmpty()) {
+            livroDTO.setNovoAutorFotoUrl(salvarArquivo(novoAutorFoto, "uploads/autores"));
+        }
+    } catch (IOException e) {
+        model.addAttribute("erroGeral", "Erro ao salvar um dos arquivos: " + e.getMessage());
+        carregarAutoresNoModelo(model);
+        return "admin/publicar-livro";
+    }
+
+    try {
+        livroService.salvar(livroDTO);
+        return "redirect:/admin/livros";
+
+    } catch (LivroDuplicadoException e) {
+        result.rejectValue("nome", "error.nome", e.getMessage());
+        carregarAutoresNoModelo(model);
+        return "admin/publicar-livro";
+
+    } catch (AnoPublicacaoInvalidoException e) {
+        result.rejectValue("anoPublicacao", "error.anoPublicacao", e.getMessage());
+        carregarAutoresNoModelo(model);
+        return "admin/publicar-livro";
+
+    } catch (AutorExistenteException e) {
+        result.rejectValue("novoAutorNome", "error.novoAutorNome", e.getMessage());
+        carregarAutoresNoModelo(model);
+        return "admin/publicar-livro";
+
+    } catch (Exception e) {
+        model.addAttribute("erroGeral", "Ocorreu um erro inesperado ao salvar os dados: " + e.getMessage());
+        carregarAutoresNoModelo(model);
+        return "admin/publicar-livro";
+    }
+}
     
     @GetMapping("/deletar/{id}")
     public String deletarLivro(@PathVariable Long id) {

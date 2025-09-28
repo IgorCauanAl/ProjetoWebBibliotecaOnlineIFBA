@@ -8,7 +8,6 @@ import br.ifba.edu.BibliotecaOnline.service.AutorService;
 import br.ifba.edu.BibliotecaOnline.service.CurtidosService;
 import br.ifba.edu.BibliotecaOnline.service.LivroService;
 import br.ifba.edu.BibliotecaOnline.service.FileStorageService;
-import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,14 +20,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @Controller
 @RequiredArgsConstructor

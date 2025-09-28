@@ -2,10 +2,8 @@ package br.ifba.edu.BibliotecaOnline.controller;
 
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
-import br.ifba.edu.BibliotecaOnline.service.CustomUserDetailsService;
 import br.ifba.edu.BibliotecaOnline.service.UsuarioService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,22 +38,16 @@ public class PerfilController {
 
     @GetMapping("/perfil-admin")
     public String paginaPerfilAdmin(Model model) {
-        // Pega o email do usuário logado
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        // Busca o usuário no banco
        Usuario usuario = usuarioService.buscarUsuarioLogado();
-        // Adiciona o objeto usuário ao modelo
         model.addAttribute("usuario", usuario);
         return "perfil-admin";
     }
 
     @GetMapping("/perfil-usuario")
     public String paginaPerfilUsuario(Model model) {
-        // Pega o email do usuário logado
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        // Busca o usuário no banco
         Usuario usuario = usuarioService.buscarUsuarioLogado();
-        // Adiciona o objeto usuário ao modelo
         model.addAttribute("usuario", usuario);
         return "perfil-usuario";
     }
