@@ -35,4 +35,27 @@ public class AvaliacaoController {
         List<AvaliacaoDTO> avaliacoes = avaliacaoService.buscarPorLivroId(livroId);
         return ResponseEntity.ok(avaliacoes);
     }
+
+    @PutMapping("/{avaliacaoId}")
+    public ResponseEntity<AvaliacaoDTO> atualizarAvaliacao(
+            @PathVariable Long livroId,
+            @PathVariable Long avaliacaoId,
+            @Valid @RequestBody CriarAvaliacaoDTO dto,
+            Authentication authentication) {
+        
+        String emailUsuario = authentication.getName();
+        AvaliacaoDTO avaliacaoAtualizada = avaliacaoService.atualizar(avaliacaoId, dto, emailUsuario);
+        return ResponseEntity.ok(avaliacaoAtualizada);
+    }
+
+    @DeleteMapping("/{avaliacaoId}")
+    public ResponseEntity<Void> deletarAvaliacao(
+            @PathVariable Long livroId,
+            @PathVariable Long avaliacaoId,
+            Authentication authentication) {
+        
+        String emailUsuario = authentication.getName();
+        avaliacaoService.deletar(avaliacaoId, emailUsuario);
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
+    }
 }

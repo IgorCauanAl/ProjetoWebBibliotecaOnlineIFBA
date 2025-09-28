@@ -11,4 +11,5 @@ public class AvaliacaoDTO {
     private LocalDateTime dataAvaliacao;
     private String nomeUsuario;
     private String fotoUsuario; // Adicional para exibir a foto do usuário no comentário
+    private String emailUsuario;
 }
