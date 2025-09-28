@@ -29,7 +29,6 @@ public class TratadorGlobalControllerAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(TratadorGlobalControllerAdvice.class);
 
-
     // Captura requisições para endpoints que não existem.
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -46,7 +45,7 @@ public class TratadorGlobalControllerAdvice {
     }
 
     // Captura erros de validação de entrada.
-   @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         // Coleta todos os erros de validação
         Map<String, String> errors = new HashMap<>();
@@ -75,57 +74,46 @@ public class TratadorGlobalControllerAdvice {
     // Captura erros de tipo inválido nos parâmetros da requisição.
     @ExceptionHandler({ TypeMismatchException.class, MethodArgumentTypeMismatchException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView handleTypeMismatch(TypeMismatchException ex, HttpServletRequest request) {
-        String expectedType = "tipo desconhecido";
-        if (ex.getRequiredType() != null) {
-            expectedType = ex.getRequiredType().getSimpleName();
-        }
-        String error = String.format("O valor '%s' não é um valor válido para o parâmetro '%s'. Esperado: %s",
-                ex.getValue(), ex.getPropertyName(), expectedType);
+    public ResponseEntity<Map<String, Object>> handleTypeMismatch(TypeMismatchException ex,
+            HttpServletRequest request) {
+        logger.warn("Erro de tipo inválido: {}", ex.getMessage());
 
-        logger.warn("Erro de tipo inválido: {}", error);
+        Map<String, Object> errorResponse = createErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Parâmetro inválido",
+                ex.getMessage());
 
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("status", HttpStatus.BAD_REQUEST.value());
-        modelAndView.addObject("error", "Parâmetro inválido");
-        modelAndView.addObject("message", error);
-        modelAndView.addObject("timestamp", LocalDateTime.now());
-        return modelAndView;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     // Captura erros de método HTTP não suportado.
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public ModelAndView handleMethodNotSupported(HttpRequestMethodNotSupportedException ex,
+    public ResponseEntity<Map<String, Object>> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex,
             HttpServletRequest request) {
-        String error = String.format("Método %s não suportado para este endpoint", request.getMethod());
-
         logger.warn("Método não suportado: {} {}", request.getMethod(), request.getRequestURI());
 
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("status", HttpStatus.METHOD_NOT_ALLOWED.value());
-        modelAndView.addObject("error", "Método não permitido");
-        modelAndView.addObject("message", error);
-        modelAndView.addObject("supportedMethods", ex.getSupportedHttpMethods());
-        modelAndView.addObject("timestamp", LocalDateTime.now());
-        return modelAndView;
+        Map<String, Object> errorResponse = createErrorResponse(
+                HttpStatus.METHOD_NOT_ALLOWED.value(),
+                "Método não permitido",
+                ex.getMessage());
+        errorResponse.put("supportedMethods", ex.getSupportedHttpMethods());
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
     }
 
     // Captura parâmetros obrigatórios ausentes.
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView handleMissingParams(MissingServletRequestParameterException ex) {
-        String error = String.format("O parâmetro '%s' é obrigatório e deve ser do tipo %s",
-                ex.getParameterName(), ex.getParameterType());
+    public ResponseEntity<Map<String, Object>> handleMissingParams(MissingServletRequestParameterException ex) {
+        logger.warn("Parâmetro obrigatório ausente: {}", ex.getMessage());
 
-        logger.warn("Parâmetro obrigatório ausente: {}", error);
+        Map<String, Object> errorResponse = createErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Parâmetro obrigatório ausente",
+                ex.getMessage());
 
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("status", HttpStatus.BAD_REQUEST.value());
-        modelAndView.addObject("error", "Parâmetro obrigatório ausente");
-        modelAndView.addObject("message", error);
-        modelAndView.addObject("timestamp", LocalDateTime.now());
-        return modelAndView;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     // Captura exceções de email já existente
@@ -137,70 +125,65 @@ public class TratadorGlobalControllerAdvice {
         Map<String, Object> errorResponse = createErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 "Email já cadastrado",
-                ex.getMessage()
-        );
+                ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
     // Captura exceções de livro duplicado.
     @ExceptionHandler(LivroDuplicadoException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ModelAndView handleLivroDuplicadoException(LivroDuplicadoException ex, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> handleLivroDuplicadoException(LivroDuplicadoException ex) {
         logger.warn("Livro duplicado: {}", ex.getMessage());
 
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("status", HttpStatus.CONFLICT.value());
-        modelAndView.addObject("error", "Livro já cadastrado");
-        modelAndView.addObject("message", ex.getMessage());
-        modelAndView.addObject("timestamp", LocalDateTime.now());
-        return modelAndView;
+        Map<String, Object> errorResponse = createErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Livro já cadastrado",
+                ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
     // Captura exceções de ano de publicação inválido.
     @ExceptionHandler(AnoPublicacaoInvalidoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView handleAnoPublicacaoInvalidoException(AnoPublicacaoInvalidoException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> handleAnoPublicacaoInvalidoException(AnoPublicacaoInvalidoException ex) {
         logger.warn("Ano de publicação inválido: {}", ex.getMessage());
 
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("status", HttpStatus.BAD_REQUEST.value());
-        modelAndView.addObject("error", "Ano de publicação inválido");
-        modelAndView.addObject("message", ex.getMessage());
-        modelAndView.addObject("timestamp", LocalDateTime.now());
-        return modelAndView;
+        Map<String, Object> errorResponse = createErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Ano de publicação inválido",
+                ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     // Captura exceções de login incorreto
     @ExceptionHandler(LoginIncorretoException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<Map<String, Object>> handleLoginIncorretoException(LoginIncorretoException ex, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> handleLoginIncorretoException(LoginIncorretoException ex,
+            HttpServletRequest request) {
         logger.warn("Tentativa de login incorreto para IP: {}", request.getRemoteAddr());
 
         Map<String, Object> errorResponse = createErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Credenciais inválidas",
-                ex.getMessage()
-        );
+                ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     // Captura todas as outras exceções não tratadas (catch-all).
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView handleGenericException(Exception ex, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex, HttpServletRequest request) {
         logger.error("Erro inesperado em {} {}: {}",
                 request.getMethod(), request.getRequestURI(), ex.getMessage(), ex);
 
         String errorMessage = "Ocorreu um erro inesperado. Por favor, entre em contato com o suporte.";
 
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        modelAndView.addObject("error", "Erro interno do servidor");
-        modelAndView.addObject("message", errorMessage);
-        modelAndView.addObject("timestamp", LocalDateTime.now());
+        Map<String, Object> errorResponse = createErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Erro interno do servidor",
+                errorMessage);
 
-        return modelAndView;
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
     // Cria um mapa de resposta de erro padronizado.
