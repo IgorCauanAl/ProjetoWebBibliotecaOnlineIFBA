@@ -114,7 +114,9 @@
                 <div class="item" th:each="livro : ${resultadosPesquisa.content}">
                     <div class="card">
                         <div class="card-image-container">
-                            <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
+                            <a th:href="@{/livros/{id}(id=${livro.id})}" title="Capa do livro">
+                                <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
+                            </a>
                             <button th:attr="data-livro-id=${livro.id}"
                                     class="like-btn"
                                     th:classappend="${livro.curtidoPeloUsuario} ? 'active'"
@@ -156,7 +158,9 @@
                 <div class="item" th:each="livro : ${resultadosGenero.content}">
                     <div class="card">
                         <div class="card-image-container">
-                            <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
+                            <a th:href="@{/livros/{id}(id=${livro.id})}" title="Capa do livro">
+                                <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
+                            </a>
                             <button th:attr="data-livro-id=${livro.id}"
                                     class="like-btn"
                                     th:classappend="${livro.curtidoPeloUsuario} ? 'active'"
@@ -202,7 +206,9 @@
                 <div class="item" th:each="livro : ${resultadosAutor.content}">
                     <div class="card">
                          <div class="card-image-container">
-                             <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
+                             <a th:href="@{/livros/{id}(id=${livro.id})}" title="Capa do livro">
+                                <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
+                            </a>
                              <button th:attr="data-livro-id=${livro.id}"
                                      class="like-btn"
                                      th:classappend="${livro.curtidoPeloUsuario} ? 'active'"
@@ -242,7 +248,9 @@
                     <div class="item" th:each="livro : ${livrosEmAlta}">
                         <div class="card">
                             <div class="card-image-container">
-                                <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
+                                <a th:href="@{/livros/{id}(id=${livro.id})}" title="Capa do livro">
+                                    <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
+                                </a>
                                 <button th:attr="data-livro-id=${livro.id}"
                                         class="like-btn"
                                         th:classappend="${livro.curtidoPeloUsuario} ? 'active'"
@@ -275,7 +283,9 @@
                     <div class="item" th:each="livro : ${livrosRecentes}">
                         <div class="card">
                             <div class="card-image-container">
-                                <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
+                                <a th:href="@{/livros/{id}(id=${livro.id})}" title="Capa do livro">
+                                    <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
+                                </a>
                                 <button th:attr="data-livro-id=${livro.id}"
                                         class="like-btn"
                                         th:classappend="${livro.curtidoPeloUsuario} ? 'active'"
@@ -308,7 +318,9 @@
                     <div class="item" th:each="livro : ${livrosTerror}">
                         <div class="card">
                             <div class="card-image-container">
-                                <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
+                                <a th:href="@{/livros/{id}(id=${livro.id})}" title="Capa do livro">
+                                    <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
+                                </a>
                                 <button th:attr="data-livro-id=${livro.id}"
                                         class="like-btn"
                                         th:classappend="${livro.curtidoPeloUsuario} ? 'active'"
@@ -341,7 +353,9 @@
                     <div class="item" th:each="livro : ${livrosRomance}">
                         <div class="card">
                             <div class="card-image-container">
-                                <img th:src="@{${livro.capaUrl}}" th:alt="${'Capa do livro ' + livro.nome}" />
+                                <a th:href="@{/livros/{id}(id=${livro.id})}" title="Capa do livro">
+                                    <img th:src="@{${livro.capaUrl}}" th:alt="${livro.nome}" />
+                                </a>
                                 <button th:attr="data-livro-id=${livro.id}"
                                         class="like-btn"
                                         th:classappend="${livro.curtidoPeloUsuario} ? 'active'"

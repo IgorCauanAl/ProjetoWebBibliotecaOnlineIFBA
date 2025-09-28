@@ -32,13 +32,6 @@
             <div th:if="${sucesso}" class="alert alert-success" th:text="${sucesso}"></div>
             <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
 
-            <div class="actions">
-                <button class="btn add-user-btn" data-open="criar-usuario">
-                    Adicionar Usuário
-                </button>
-                <button class="btn export-users-btn">Exportar Usuários</button>
-            </div>
-
             <div class="search-table-container">
                 <form th:action="@{/admin/gerenciar-usuarios}" method="get" class="search-form">
                     <input id="user-search-input" type="text" name="keyword" th:value="${keyword}" placeholder="Pesquisar por nome ou e-mail..." />

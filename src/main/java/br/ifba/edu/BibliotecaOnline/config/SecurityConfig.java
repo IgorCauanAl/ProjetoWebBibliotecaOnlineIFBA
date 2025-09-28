@@ -34,7 +34,7 @@ public class SecurityConfig {
                         "/recuperar",
                         "/api/recuperar/**",
                         "/api/usuariosMudar/deletarConta",
-                                "/admin/livros/**"
+                                "/admin/livros/**"                             
                 ).permitAll()
                 
                 // Apenas usuários com a permissão 'ADMIN' podem acessar estas URLs.
