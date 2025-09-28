@@ -2,6 +2,9 @@ package br.ifba.edu.BibliotecaOnline.controller;
 
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
+import br.ifba.edu.BibliotecaOnline.service.CustomUserDetailsService;
+import br.ifba.edu.BibliotecaOnline.service.UsuarioService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,15 +17,13 @@ import org.springframework.security.core.GrantedAuthority;
 
 
 @Controller
+@AllArgsConstructor
 public class PerfilController {
 
-    @Autowired
-    private final UsuarioRepository usuarioRepository;
 
-    
-    public PerfilController(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
+    private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
+
 
     @GetMapping("/perfil")
     public String redirecionarPerfil() {
@@ -42,8 +43,7 @@ public class PerfilController {
         // Pega o email do usuário logado
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         // Busca o usuário no banco
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+       Usuario usuario = usuarioService.buscarUsuarioLogado();
         // Adiciona o objeto usuário ao modelo
         model.addAttribute("usuario", usuario);
         return "perfil-admin";
@@ -54,8 +54,7 @@ public class PerfilController {
         // Pega o email do usuário logado
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         // Busca o usuário no banco
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        Usuario usuario = usuarioService.buscarUsuarioLogado();
         // Adiciona o objeto usuário ao modelo
         model.addAttribute("usuario", usuario);
         return "perfil-usuario";

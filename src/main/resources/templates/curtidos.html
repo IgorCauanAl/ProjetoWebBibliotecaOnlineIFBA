@@ -52,8 +52,11 @@
         <section id="liked-grid" class="liked-grid" th:unless="${paginaDeLivrosCurtidos.empty}">
             <div th:each="livro : ${paginaDeLivrosCurtidos.content}" class="book-card" th:data-book="${livro.id}">
                 <div class="book-cover">
-                    <img th:src="${livro.capaUrl} ?: '/img/capas/placeholder.jpg'"
-                         th:alt="'Capa do livro ' + ${livro.nome}" />
+                    <a th:href="@{/livros/{id}(id=${livro.id})}" title="Capa do livro">
+                        <img th:src="${livro.capaUrl} ?: '/img/capas/placeholder.jpg'"
+                             th:alt="'Capa do livro ' + ${livro.nome}" />
+                    </a>
+
                     <button class="heart-btn active" th:attr="data-livro-id=${livro.id}" title="Curtido">
                         <i class="bx bxs-heart"></i>
                     </button>

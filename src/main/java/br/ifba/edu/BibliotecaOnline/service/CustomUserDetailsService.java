@@ -3,6 +3,7 @@ package br.ifba.edu.BibliotecaOnline.service;
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.repository.UsuarioRepository;
 import br.ifba.edu.BibliotecaOnline.config.CustomUserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,5 +29,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         return userDetails;
     }
 
-    
 }

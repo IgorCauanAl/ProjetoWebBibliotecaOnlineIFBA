@@ -14,7 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,12 +36,25 @@ public class AvaliacaoService {
         Usuario usuario = usuarioRepository.findByEmail(usuarioEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        AvaliacaoEntity avaliacao = new AvaliacaoEntity();
+        // Procurar a avaliação anterior do usuario
+        Optional<AvaliacaoEntity> avaliacaoExistenteOpt = avaliacaoRepository.findByUsuarioAndLivro(usuario, livro);
+
+        AvaliacaoEntity avaliacao;
+        if (avaliacaoExistenteOpt.isPresent()) {
+            // Se existir uma avaliação, ele atualiza
+            avaliacao = avaliacaoExistenteOpt.get();
+        } else {
+            // Se nao existe, e criado uma nova instancia.
+            avaliacao = new AvaliacaoEntity();
+            avaliacao.setLivro(livro);
+            avaliacao.setUsuario(usuario);
+        }
+
+        // Atualiza os valores da avaliacao
         avaliacao.setComentario(dto.getComentario());
         avaliacao.setNota(dto.getNota());
-        avaliacao.setLivro(livro);
-        avaliacao.setUsuario(usuario);
 
+        // Salva a entidade
         AvaliacaoEntity avaliacaoSalva = avaliacaoRepository.save(avaliacao);
 
         return avaliacaoMapper.toDTO(avaliacaoSalva);

@@ -38,7 +38,6 @@ public class HomeController {
     private final AutorService autorService;
     private final FileStorageService fileStorageService;
     private final CurtidosService curtidosService;
-    private final UsuarioRepository usuarioRepository;
 
     @GetMapping({"/", "/home"})
     public String exibirHome(
@@ -164,17 +163,4 @@ public class HomeController {
         return "curtidos"; 
     }
 
-    private Set<Long> getLivrosCurtidosIds() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
-            return Collections.emptySet();
-        }
-
-        String email = authentication.getName();
-        return usuarioRepository.findByEmail(email)
-                .map(usuario -> usuario.getLivrosCurtidos().stream()
-                        .map(livro -> livro.getId())
-                        .collect(Collectors.toSet()))
-                .orElse(Collections.emptySet());
-    }
 }

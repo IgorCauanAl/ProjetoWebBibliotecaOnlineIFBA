@@ -70,8 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", function () {
     console.log("DOM carregado. Iniciando script dinâmico do carrossel.");
 
-    // DADOS DOS LIVROS (ADICIONAR/REMOVER LIVROS)
-    // ESTA SEÇÃO FOI REMOVIDA PARA QUE OS DADOS SEJAM PUXADOS DE OUTRA FONTE (EX: BANCO DE DADOS)
+    // DADOS DOS LIVROS
 
     //FUNÇÃO QUE CRIA O HTML DE CADA CARD
     function gerarCardHTML(livro) {
@@ -110,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Preenche cada carrossel com seus respectivos livros
-    // As chamadas para popularCarrossel foram removidas, pois os dados estáticos não existem mais.
 
     function initializeCarousel(slider) {
         const list = slider.querySelector(".list");

@@ -69,6 +69,13 @@ public class UsuarioService {
         usuarioRepository.delete(usuarioParaDeletar);
     }
 
+    public Usuario buscarUsuarioLogado(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        // Simplesmente busca e retorna a entidade completa
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    }
+
     public Page<Usuario> listarTodosPaginado(Pageable pageable) {
         return usuarioRepository.findAll(pageable);
     }
