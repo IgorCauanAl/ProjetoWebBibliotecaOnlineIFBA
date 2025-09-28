@@ -22,7 +22,7 @@ buildNumber.properties
 data/
 
 # Pasta de uploads de arquivos
-
+/uploads
 
 # Arquivos do Eclipse
 .settings/

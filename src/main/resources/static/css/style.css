@@ -2021,3 +2021,23 @@ img {
   justify-content: center !important;
   gap: 8px !important;
 }
+
+.existing-file-info {
+    background-color: #f0f4f8;
+    border-left: 4px solid #007bff;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+.existing-file-info i {
+    color: #d93025;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+.existing-file-info small {
+    display: block;
+    margin-top: 5px;
+    color: #6c757d;
+}
+

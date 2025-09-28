@@ -5,6 +5,7 @@ import br.ifba.edu.BibliotecaOnline.entities.Autor;
 import br.ifba.edu.BibliotecaOnline.entities.LivroEntity;
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.excecao.AnoPublicacaoInvalidoException;
+import br.ifba.edu.BibliotecaOnline.excecao.AutorExistenteException;
 import br.ifba.edu.BibliotecaOnline.excecao.LivroDuplicadoException;
 import br.ifba.edu.BibliotecaOnline.mapper.LivroMapper;
 import br.ifba.edu.BibliotecaOnline.model.GeneroEnum;
@@ -40,45 +41,89 @@ public class LivroService {
 
     @Transactional
     public LivroDTO salvar(LivroDTO livroDTO) {
-        if (livroDTO.getAnoPublicacao() == null || livroDTO.getAnoPublicacao() > LocalDate.now().getYear()) {
+        validarAnoPublicacao(livroDTO.getAnoPublicacao());
+        validarNomeDuplicado(livroDTO);
+    
+        Autor autor = determinarAutor(livroDTO);
+
+        if (livroDTO.getId() != null) {
+            LivroEntity livroExistente = livroRepository.findById(livroDTO.getId())
+                    .orElseThrow(() -> new RuntimeException("Livro não encontrado para o ID: " + livroDTO.getId()));
+            
+            livroExistente.setNome(livroDTO.getNome());
+            livroExistente.setAnoPublicacao(livroDTO.getAnoPublicacao());
+            livroExistente.setSinopse(livroDTO.getSinopse());
+            livroExistente.setGenero(livroDTO.getGenero());
+            livroExistente.setAutor(autor);
+            
+            if (livroDTO.getCapaUrl() != null) {
+                livroExistente.setCapaUrl(livroDTO.getCapaUrl());
+            }
+            if (livroDTO.getPdfUrl() != null) {
+                livroExistente.setPdfUrl(livroDTO.getPdfUrl());
+            }
+
+            LivroEntity livroSalvo = livroRepository.save(livroExistente);
+            return livroMapper.toDTO(livroSalvo);
+
+        } else {
+            LivroEntity novoLivro = livroMapper.toEntity(livroDTO);
+            novoLivro.setAutor(autor);
+        
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            Usuario publicadoPor = usuarioRepository.findByEmail(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
+            novoLivro.setPublicadoPor(publicadoPor);
+        
+            LivroEntity livroSalvo = livroRepository.save(novoLivro);
+            return livroMapper.toDTO(livroSalvo);
+        }
+    }
+
+     private Autor determinarAutor(LivroDTO livroDTO) {
+        if ("novo".equals(livroDTO.getTipoAutor())) { 
+            String novoAutorNome = livroDTO.getNovoAutorNome();
+
+            if (novoAutorNome == null || novoAutorNome.isBlank()) {
+                throw new IllegalArgumentException("O nome do novo autor é obrigatório.");
+            }
+
+            Optional<Autor> autorExistente = autorRepository.findByNomeAutorIgnoreCase(novoAutorNome);
+            if (autorExistente.isPresent()) {
+
+                throw new AutorExistenteException("Este autor já está cadastrado no sistema.");
+            }
+
+            Autor novoAutor = new Autor();
+            novoAutor.setNomeAutor(novoAutorNome);
+            novoAutor.setDescricaoDoAutor(livroDTO.getNovoAutorDescricao());
+            novoAutor.setFotoAutor(livroDTO.getNovoAutorFotoUrl());
+            return autorRepository.save(novoAutor);
+
+        } else if (livroDTO.getAutorId() != null) {
+            return autorRepository.findById(livroDTO.getAutorId())
+                    .orElseThrow(() -> new RuntimeException("Autor não encontrado para o ID: " + livroDTO.getAutorId()));
+        } else {
+            throw new IllegalStateException("O autor do livro não foi especificado corretamente.");
+        }
+    }
+
+    private void validarAnoPublicacao(Integer ano) {
+        if (ano == null || ano > LocalDate.now().getYear() || ano < 1500) {
             throw new AnoPublicacaoInvalidoException("Ano de publicação inválido.");
         }
+    }
 
-        if (livroDTO.getId() == null) {
+    private void validarNomeDuplicado(LivroDTO livroDTO) {
+        if (livroDTO.getId() == null) { 
             if (livroRepository.existsByNome(livroDTO.getNome())) {
                 throw new LivroDuplicadoException("Já existe um livro com o mesmo nome.");
             }
-        } else {
+        } else { 
             if (livroRepository.existsByNomeAndIdNot(livroDTO.getNome(), livroDTO.getId())) {
                 throw new LivroDuplicadoException("Já existe um livro com o mesmo nome.");
             }
         }
-    
-        LivroEntity livro = livroMapper.toEntity(livroDTO);
-        
-        Autor autor;
-        if (livroDTO.getNovoAutorNome() != null && !livroDTO.getNovoAutorNome().isBlank()) {
-            Autor novoAutor = new Autor();
-            novoAutor.setNomeAutor(livroDTO.getNovoAutorNome());
-            novoAutor.setDescricaoDoAutor(livroDTO.getNovoAutorDescricao());
-            novoAutor.setFotoAutor(livroDTO.getNovoAutorFotoUrl()); 
-            autor = autorRepository.save(novoAutor);
-        } else if (livroDTO.getAutorId() != null) {
-            autor = autorRepository.findById(livroDTO.getAutorId())
-                    .orElseThrow(() -> new RuntimeException("Autor não encontrado para o ID: " + livroDTO.getAutorId()));
-        } else {
-            throw new RuntimeException("Autor não fornecido para o livro.");
-        }
-
-        livro.setAutor(autor);
-    
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario publicadoPor = usuarioRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
-        livro.setPublicadoPor(publicadoPor);
-    
-        LivroEntity livroSalvo = livroRepository.save(livro);
-        return livroMapper.toDTO(livroSalvo);
     }
 
     public void deletar(Long id) {

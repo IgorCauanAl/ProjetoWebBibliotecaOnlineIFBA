@@ -1,4 +1,4 @@
-// Aguarda o carregamento completo do DOM para executar os scripts
+
 document.addEventListener('DOMContentLoaded', function() {
     
     // --- SCRIPT PARA PREVIEW DA IMAGEM DE CAPA ---
@@ -50,29 +50,23 @@ document.addEventListener('DOMContentLoaded', function() {
             novoAutorNomeInput.disabled = false;
             novoAutorDescricaoTextarea.disabled = false;
 
-            // Limpa a seleção do dropdown para não enviar dados conflitantes
             autorIdSelect.value = '';
         }
     }
 
-    // Adiciona o evento de 'change' para os radio buttons
+
     tipoAutorRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
             toggleAutorFields(event.target.value);
         });
     });
 
-    // Define o estado inicial do formulário com base no modo (novo ou edição)
-    const idInput = document.querySelector('input[name="id"]');
-    if (idInput) {
-        const isEdicao = idInput.value !== '';
-        if (isEdicao) {
-             // Em modo de edição, sempre começa com "Autor Existente" selecionado
-            document.querySelector('input[name="tipoAutor"][value="existente"]').checked = true;
-            toggleAutorFields('existente');
-        } else {
-            // Para um livro novo, também começa com a opção padrão "Autor Existente"
-            toggleAutorFields('existente');
-        }
+    const checkedRadio = document.querySelector('input[name="tipoAutor"]:checked');
+    
+    if (checkedRadio) {
+        toggleAutorFields(checkedRadio.value);
+    } else {
+        document.querySelector('input[name="tipoAutor"][value="existente"]').checked = true;
+        toggleAutorFields('existente');
     }
 });

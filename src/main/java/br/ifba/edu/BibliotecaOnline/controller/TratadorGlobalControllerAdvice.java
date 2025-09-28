@@ -23,31 +23,12 @@ import br.ifba.edu.BibliotecaOnline.excecao.LoginIncorretoException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class TratadorGlobalControllerAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(TratadorGlobalControllerAdvice.class);
 
-    // Em revisão: 
-    // Captura exceções do tipo RecursoNaoEncontradoException
-    /*
-     * @ExceptionHandler(RecursoNaoEncontradoException.class)
-     * 
-     * @ResponseStatus(HttpStatus.NOT_FOUND)
-     * public ModelAndView
-     * handleRecursoNaoEncontradoException(RecursoNaoEncontradoException ex) {
-     * logger.warn("Recurso não encontrado: {}", ex.getMessage());
-     * 
-     * ModelAndView modelAndView = new ModelAndView("error");
-     * modelAndView.addObject("status", HttpStatus.NOT_FOUND.value());
-     * modelAndView.addObject("error", "Recurso não encontrado");
-     * modelAndView.addObject("message", ex.getMessage());
-     * modelAndView.addObject("timestamp", LocalDateTime.now());
-     * return modelAndView;
-     * }
-     */
 
     // Captura requisições para endpoints que não existem.
     @ExceptionHandler(NoHandlerFoundException.class)

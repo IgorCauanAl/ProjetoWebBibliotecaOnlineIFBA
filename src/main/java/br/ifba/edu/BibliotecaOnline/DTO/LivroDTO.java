@@ -43,4 +43,6 @@ public class LivroDTO {
     private String novoAutorFotoUrl;
 
     private boolean curtidoPeloUsuario; 
+
+    private String tipoAutor;
 }

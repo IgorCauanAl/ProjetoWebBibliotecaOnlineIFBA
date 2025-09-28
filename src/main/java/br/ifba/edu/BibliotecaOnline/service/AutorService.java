@@ -26,4 +26,5 @@ public class AutorService {
     public Optional<Autor> buscarPorNomeIgnoreCase(String nome) {
         return autorRepository.findByNomeAutorIgnoreCase(nome);
     }
+    
 }
