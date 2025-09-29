@@ -52,4 +52,7 @@ public class LivroEntity {
     @ManyToMany(mappedBy = "livrosCurtidos")
     private List<Usuario> usuariosQueCurtiram = new ArrayList<>();
 
+    @OneToMany(mappedBy = "livro", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AvaliacaoEntity> avaliacoes = new ArrayList<>();
+
 }

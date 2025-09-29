@@ -59,6 +59,7 @@ public class HomeController {
             model.addAttribute("isSearch", true);
             model.addAttribute("isGeneroSearch", false);
             model.addAttribute("isAutorSearch", false);
+            model.addAttribute("isListaAutores", false); 
 
         } else {
             
@@ -69,6 +70,7 @@ public class HomeController {
             model.addAttribute("isSearch", false);
             model.addAttribute("isGeneroSearch", false);
             model.addAttribute("isAutorSearch", false);
+            model.addAttribute("isListaAutores", false); 
         }
 
         return "home";
@@ -90,6 +92,7 @@ public class HomeController {
         model.addAttribute("isGeneroSearch", true);
         model.addAttribute("isSearch", false);
         model.addAttribute("isAutorSearch", false);
+        model.addAttribute("isListaAutores", false); 
 
         return "home";
     }
@@ -116,6 +119,7 @@ public class HomeController {
             model.addAttribute("isAutorSearch", true);
             model.addAttribute("isSearch", false);
             model.addAttribute("isGeneroSearch", false);
+            model.addAttribute("isListaAutores", false); 
 
         } catch (NoSuchElementException e) {
             return "redirect:/home";
@@ -157,6 +161,26 @@ public class HomeController {
         Page<CurtidosDTO> paginaDeLivrosCurtidos = curtidosService.listarCurtidos(authentication, pageable);
         model.addAttribute("paginaDeLivrosCurtidos", paginaDeLivrosCurtidos);
         return "curtidos"; 
+    }
+
+    @GetMapping("/autores")
+    public String exibirTodosAutores(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            Model model) {
+
+        final int TAMANHO_PAGINA = 12;
+        Pageable pageable = PageRequest.of(page, TAMANHO_PAGINA, Sort.by("nomeAutor"));
+
+        Page<Autor> paginaDeAutores = autorService.listarPaginado(pageable);
+
+        model.addAttribute("paginaDeAutores", paginaDeAutores);
+        
+        model.addAttribute("isListaAutores", true);
+        model.addAttribute("isSearch", false);
+        model.addAttribute("isGeneroSearch", false);
+        model.addAttribute("isAutorSearch", false);
+
+        return "home";
     }
 
 }

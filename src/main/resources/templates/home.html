@@ -20,6 +20,84 @@
             padding: 1.2rem 2.5rem; 
             font-size: 1.6rem; 
         }
+        .autores-grid-section {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .autores-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .autor-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .autor-link {
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s ease;
+        }
+
+        .autor-link:hover {
+            transform: scale(1.05);
+        }
+
+        .autor-foto-redonda {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover; /* Garante que a imagem não fique distorcida */
+            border: 3px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .autor-nome {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #333;
+        }
+        .pagination-container {
+            padding-bottom: 4rem;
+        }
+        .btn-delete-autor {
+            background: none;
+            border: none;
+            color: #dc3545; 
+            font-size: 1.8rem; 
+            cursor: pointer;
+            padding: 0 5px;
+            transition: color 0.3s ease;
+        }
+
+        .btn-delete-autor:hover {
+            color: #a71d2a;
+        }
+        .author-results-container {
+            display: flex;
+            align-items: center;        
+            justify-content: flex-start;            
+            gap: 30px;
+            max-width: 1200px;
+            margin: 6rem auto;
+            padding: 0 2%; 
+        }
+        .author-content-column {
+            flex-grow: 0;
+            text-align: left;
+        }
+        .author-content-column > div:first-child {
+            justify-content: flex-start;
+        }
     </style>
 </head>
 
@@ -105,7 +183,9 @@
                 </div>
             </div>
             <div class="home-img">
-                <img id="home-image" th:src="@{/img/estante.png}" alt="Estante de livros"/>
+                <a th:href="@{/autores}" title="Descubra nossos autores!">
+                    <img id="home-image" th:src="@{/img/estante.png}" alt="Estante de livros"/>
+                </a>
             </div>
         </div>
     </section>
@@ -202,7 +282,20 @@
         <section class="author-results-container">
             <div class="author-photo-column"><img th:src="@{${autorFotoUrl} ?: '/img/user.png'}" alt="Foto do Autor"/></div>
             <div class="author-content-column">
-                <h2 class="heading">Livros de <span th:text="${autorNome}"></span></h2>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <h2 class="heading" style="margin-bottom: 0;">Livros de <span th:text="${autorNome}"></span></h2>
+
+                <div sec:authorize="hasRole('ADMIN')">
+                    <form id="form-deletar-autor" th:action="@{/admin/autores/deletar/{id}(id=${autorId})}" method="post">
+                        
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        
+                        <button type="button" id="btn-confirmar-delecao" class="btn-delete-autor" title="Deletar Autor">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
                 <p class="author-description" th:text="${autorDescricao}"></p>
                 <div th:if="${resultadosAutor.content.empty}"><p class="text-center">Nenhum livro encontrado para este autor.</p></div>
             </div>
@@ -246,7 +339,38 @@
         </nav>
     </div>
 
-    <div th:unless="${isSearch or isGeneroSearch or isAutorSearch}">
+    <div th:if="${isListaAutores}">
+        <section class="autores-grid-section">
+            <h2 class="heading">Nossos Autores</h2>
+            <div th:if="${paginaDeAutores.content.empty}">
+                <p class="text-center">Nenhum autor cadastrado ainda.</p>
+            </div>
+
+            <div th:unless="${paginaDeAutores.content.empty}" class="autores-grid-container">
+                <div class="autor-card" th:each="autor : ${paginaDeAutores.content}">
+                    <a th:href="@{/autor/{id}(id=${autor.id})}" class="autor-link">
+                        <img th:src="@{${autor.fotoAutor} ?: '/img/user.png'}" alt="Foto do Autor" class="autor-foto-redonda"/>
+                        <p class="autor-nome" th:text="${autor.nomeAutor}"></p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <nav class="pagination-container" aria-label="Navegação de páginas de autores" th:if="${paginaDeAutores.totalPages > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${paginaDeAutores.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/autores(page=${paginaDeAutores.number - 1})}">&laquo;</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, paginaDeAutores.totalPages - 1)}" th:classappend="${i == paginaDeAutores.number} ? 'active'">
+                    <a class="page-link" th:href="@{/autores(page=${i})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${paginaDeAutores.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/autores(page=${paginaDeAutores.number + 1})}">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div th:unless="${isSearch or isGeneroSearch or isAutorSearch or isListaAutores}">
         <section class="emalta" id="emalta">
             <h2 class="heading">Em alta esse mês</h2>
             <h1>Esses foram os livros mais lidos esse mês pelos usuários</h1>
@@ -387,13 +511,14 @@
             </div>
         </section>
     </div>
-
     <div th:replace="~{fragments/novo-footer :: footer}"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script th:src="@{/js/filtro-busca.js}" defer></script>
     <script th:src="@{/js/script.js}" defer></script>
+    <script th:src="@{/js/autores.js}" defer></script>
     <script type="module" th:src="@{/js/curtidos.js}"></script>
+
 
 </body>
 </html>

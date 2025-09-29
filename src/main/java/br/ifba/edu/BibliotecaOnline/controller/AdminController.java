@@ -2,7 +2,11 @@ package br.ifba.edu.BibliotecaOnline.controller;
 
 import br.ifba.edu.BibliotecaOnline.entities.Usuario;
 import br.ifba.edu.BibliotecaOnline.service.UsuarioService;
+import br.ifba.edu.BibliotecaOnline.service.AutorService;
 import lombok.RequiredArgsConstructor;
+
+import java.util.NoSuchElementException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminController {
 
     private final UsuarioService usuarioService;
+    private final AutorService autorService;
 
 
     @PostMapping("/usuarios/promover/{id}")
@@ -62,5 +67,18 @@ public class AdminController {
         model.addAttribute("paginaDeUsuarios", paginaDeUsuarios);
         
         return "admin/gerenciar-usuarios";
+    }
+
+    @PostMapping("/autores/deletar/{id}")
+    public String deletarAutor(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            autorService.deletar(id);
+            redirectAttributes.addFlashAttribute("sucesso", "Autor e todos os seus livros foram deletados com sucesso!");
+        } catch (NoSuchElementException e) {
+            redirectAttributes.addFlashAttribute("erro", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erro", "Ocorreu um erro ao tentar deletar o autor.");
+        }
+        return "redirect:/autores";
     }
 }

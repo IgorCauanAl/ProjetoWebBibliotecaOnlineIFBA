@@ -3,10 +3,13 @@ package br.ifba.edu.BibliotecaOnline.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
 import java.time.LocalDateTime;
 
+@Audited
 @Entity
 @Table(name = "TB_AVALIACAO")
 @Getter

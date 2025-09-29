@@ -11,6 +11,7 @@ public interface LivroMapper {
     @Mapping(target = "publicadoPor", ignore = true)
     @Mapping(target = "autor", ignore = true)
     @Mapping(target = "usuariosQueCurtiram", ignore = true)
+    @Mapping(target = "avaliacoes", ignore = true)
     LivroEntity toEntity(LivroDTO dto);
 
     @Mapping(source = "publicadoPor.nome", target = "publicadoPorNome")
